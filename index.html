@@ -10,16 +10,16 @@
 <body>
 <div id="counter">0:00</div>
 <div id="controller">
-    <span id="stop" onclick="stop()" style="cursor:pointer">⏹</span>&nbsp;&nbsp;<span id="play" onclick="start()" style="cursor:pointer">&#127843;</span>
+    <span id="stop" onclick="init()" style="cursor:pointer">⏹</span>&nbsp;&nbsp;<span id="play" onclick="startOrPause()" style="cursor:pointer">&#127843;</span>
 </div>
 <div class="container">
     <ul>
         <li>
-            <input type="radio" onclick="stop()" id="180seconds" checked="checked" name="selector">
+            <input type="radio" onclick="init()" id="180seconds" checked="checked" name="selector">
             <label for="180seconds">3:00</label>
         </li>
         <li>
-            <input type="radio" onclick="stop()" id="90seconds" name="selector">
+            <input type="radio" onclick="init()" id="90seconds" name="selector">
             <label for="90seconds">1:30</label>
         </li>
     </ul>
@@ -57,7 +57,7 @@
         }
     }
 
-    function stop() {
+    function init() {
         countFrom = document.getElementById("90seconds").checked ? 90 * resolution : 180 * resolution;
         count = countFrom;
         if (timeoutID) {
@@ -67,7 +67,7 @@
         setColor();
     }
 
-    function start() {
+    function startOrPause() {
         if (timeoutID == null) {
             // play
             paused = false;
@@ -95,7 +95,7 @@
         }
     }
 
-    stop();
+    init();
 </script>
 </body>
 </html>
