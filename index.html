@@ -95,8 +95,9 @@
     const resolution = 10;
 
     function setColor() {
-        const seconds = Math.trunc(count / resolution) % 60;
-        const minutes = (Math.trunc(count / resolution) - seconds) / 60;
+        let currentSeconds = (count % resolution !== 0 ? count + (resolution - (count % resolution)) : count) / resolution;
+        const seconds = currentSeconds % 60;
+        const minutes = (currentSeconds - seconds) / 60;
         document.getElementById("counter").innerHTML = minutes + ":" + ('00' + seconds).slice(-2);
         document.getElementById("play").innerText = paused || timeoutID == null ? "▶️" : "⏸";
         if (0 === count) {
