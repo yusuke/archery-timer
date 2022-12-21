@@ -101,7 +101,7 @@
         const minutes = (currentSeconds - seconds) / 60;
         document.getElementById("counter").innerHTML = minutes + ":" + ('00' + seconds).slice(-2);
         document.getElementById("play").innerText = paused || timeoutID == null ? "▶️" : "⏸";
-        if (0 === count) {
+        if (0 === currentSeconds) {
             document.getElementById("counter").style.background = "red";
             paused = false;
             return;
@@ -111,11 +111,11 @@
             document.getElementById("counter").style.background = "green";
             return;
         }
-        if (30 * resolution < count) {
+        if (30 < currentSeconds) {
             document.getElementById("counter").style.background = "green";
 
         }
-        if (30 * resolution === count) {
+        if (30 === currentSeconds) {
             document.getElementById("counter").style.background = "yellow";
         }
     }
