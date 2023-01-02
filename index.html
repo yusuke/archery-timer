@@ -16,11 +16,11 @@
     <ul>
         <li>
             <input type="radio" onclick="init()" id="180seconds" checked="checked" name="selector">
-            <label for="180seconds">3:00</label>
+            <label for="180seconds">180</label>
         </li>
         <li>
             <input type="radio" onclick="init()" id="90seconds" name="selector">
-            <label for="90seconds">1:30</label>
+            <label for="90seconds">90</label>
         </li>
     </ul>
 </div>
@@ -34,9 +34,7 @@
 
     function setColor() {
         let currentSeconds = (count % resolution !== 0 ? count + (resolution - (count % resolution)) : count) / resolution;
-        const seconds = currentSeconds % 60;
-        const minutes = (currentSeconds - seconds) / 60;
-        document.getElementById("counter").innerHTML = minutes + ":" + ('00' + seconds).slice(-2);
+        document.getElementById("counter").innerHTML = (' ' + currentSeconds).slice(-3);
         document.getElementById("play").innerText = paused || timeoutID == null ? "▶️" : "⏸";
         if (0 === currentSeconds) {
             document.getElementById("counter").style.background = "red";
