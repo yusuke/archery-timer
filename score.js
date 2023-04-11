@@ -74,16 +74,34 @@ const keyboard = document.getElementById("keyboard");
 
 const onScreenKeyboardBtns = keyboard.querySelectorAll("button");
 
+const moveFocus = (direction) => {
+    const inputs = Array.from(document.getElementById("score-table").querySelectorAll("input"));
+    const currentIndex = inputs.indexOf(document.activeElement);
+    const newIndex = currentIndex + direction;
+
+    if (newIndex >= 0 && newIndex < inputs.length) {
+        inputs[newIndex].focus();
+    }
+};
+
 onScreenKeyboardBtns.forEach(btn => {
     btn.addEventListener("mousedown", function (e) {
         e.preventDefault();
     });
     btn.addEventListener("click", function () {
-        const currentInput = document.activeElement;
-        if (currentInput.tagName === "INPUT") {
-            currentInput.value = this.textContent;
-            currentInput.dispatchEvent(new Event('input'));
-            moveToNextInput({ target: currentInput });
+        const value = this.dataset.value;
+
+        if (value === "⬅️") {
+            moveFocus(-1);
+        } else if (value === "➡️") {
+            moveFocus(1);
+        } else {
+            const currentInput = document.activeElement;
+            if (currentInput.tagName === "INPUT") {
+                currentInput.value = value;
+                currentInput.dispatchEvent(new Event('input'));
+                moveToNextInput({ target: currentInput });
+            }
         }
     });
 });
