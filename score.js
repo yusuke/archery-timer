@@ -1,8 +1,3 @@
-const restrictInput = (e) => {
-    if (!/^[XxMm0-9]*$/.test(e.key)) {
-        e.preventDefault();
-    }
-};
 
 const scoreValue = (input) => {
     const value = input.value.toUpperCase();
@@ -75,23 +70,6 @@ const moveToNextInput = (e) => {
     }
 };
 
-const handleBackspace = (e) => {
-    if (e.key === "Backspace" || e.key === "Delete") {
-        const target = e.target;
-        const value = target.value;
-        if (value.length === 0) {
-            const inputs = Array.from(document.getElementById("score-table").querySelectorAll("input"));
-            const index = inputs.indexOf(target);
-            if (index > 0) {
-                inputs[index - 1].focus();
-                inputs[index - 1].value = "";
-            }
-        }
-    }
-};
-
-let focusedInput = null;
-
 const keyboard = document.getElementById("keyboard");
 
 const onScreenKeyboardBtns = keyboard.querySelectorAll("button");
@@ -112,6 +90,10 @@ onScreenKeyboardBtns.forEach(btn => {
 
 document.body.appendChild(keyboard);
 
+let focusInput = null;
+const handleInputClick = (e) => {
+    focusInput = e.target;
+};
 const initScoreTable = () => {
     const scoreTable = document.getElementById("score-table");
 
@@ -120,9 +102,9 @@ const initScoreTable = () => {
         if (i % 2 === 0) {
             row.innerHTML = `
                 <td>${(i / 2) + 1}</td>
-                <td><input type="text" maxlength="2" size="2"></td>
-                <td><input type="text" maxlength="2" size="2"></td>
-                <td><input type="text" maxlength="2" size="2"></td>
+                <td><input type="text" maxlength="2" size="2" readonly></td>
+                <td><input type="text" maxlength="2" size="2" readonly></td>
+                <td><input type="text" maxlength="2" size="2" readonly></td>
                 <td></td>
                 <td rowspan="2"></td>
                 <td rowspan="2"></td>
@@ -130,9 +112,9 @@ const initScoreTable = () => {
         } else {
             row.innerHTML = `
                 <td></td>
-                <td><input type="text" maxlength="2" size="2"></td>
-                <td><input type="text" maxlength="2" size="2"></td>
-                <td><input type="text" maxlength="2" size="2"></td>
+                <td><input type="text" maxlength="2" size="2" readonly></td>
+                <td><input type="text" maxlength="2" size="2" readonly></td>
+                <td><input type="text" maxlength="2" size="2" readonly></td>
                 <td></td>
             `;
         }
@@ -141,9 +123,6 @@ const initScoreTable = () => {
     // Add event listeners to input elements
     const inputs = scoreTable.querySelectorAll("input");
     inputs.forEach(input => {
-        input.addEventListener("keydown", restrictInput);
-        input.addEventListener("keyup", moveToNextInput);
-        input.addEventListener("keyup", handleBackspace);
         input.addEventListener("input", calculateScore);
         input.addEventListener("focus", () => {
             input.select();
@@ -151,6 +130,7 @@ const initScoreTable = () => {
         input.addEventListener("contextmenu", (e) => {
             e.preventDefault();
         });
+        input.addEventListener("click", handleInputClick);
     });
 };
 
@@ -161,7 +141,6 @@ const adjustScoreWrapperHeight = () => {
     const keyboardHeight = keyboard.offsetHeight;
 
     scoreWrapper.style.maxHeight = `calc(100vh - ${keyboardHeight + 100}px)`; // 50px for additional spacing
-    console.log(scoreWrapper.style.maxHeight);
 };
 
 adjustScoreWrapperHeight();
