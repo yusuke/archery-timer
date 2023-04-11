@@ -1,18 +1,33 @@
+body {
+    font-family: sans-serif;
+}
+
 table {
     border-collapse: collapse;
-    margin: 1em 0;
 }
 
 th,
 td {
-    border: 1px solid #666;
-    padding: 0.5em;
-}
-
-th {
-    background-color: #eee;
-}
-
-.col3 {
+    border: 1px solid black;
+    padding: 8px;
     text-align: center;
+}
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+}
+
+#keyboard button {
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.score-wrapper {
+    max-height: calc(100vh - 150px); /* Adjust the height to leave enough space for the keyboard */
+    overflow-y: auto;
 }

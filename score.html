@@ -1,27 +1,51 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>アーチェリースコア集計</title>
-  <link rel="stylesheet" href="score.css">
-  <script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アーチェリースコア集計</title>
+    <link rel="stylesheet" href="score.css">
+
 </head>
 <body>
 <h1>アーチェリースコア集計</h1>
-<table>
-  <thead>
-  <tr>
-    <th>エンド</th>
-    <th>1本目</th>
-    <th>2本目</th>
-    <th>3本目</th>
-    <th>3本計</th>
-    <th>6本計</th>
-    <th>累計</th>
-  </tr>
-  </thead>
-  <tbody id="score-table">
-  </tbody>
-</table></body>
+<div class="score-wrapper">
+    <table>
+        <thead>
+        <tr>
+            <th>エンド</th>
+            <th>1本目</th>
+            <th>2本目</th>
+            <th>3本目</th>
+            <th>3本計</th>
+            <th>6本計</th>
+            <th>累計</th>
+        </tr>
+        </thead>
+        <tbody id="score-table">
+        </tbody>
+    </table>
+</div>
+<div id="keyboard" class="hidden">
+    <div class="keyboard-row">
+        <button data-value="X">X</button>
+        <button data-value="10">10</button>
+        <button data-value="9">9</button>
+        <button data-value="8">8</button>
+    </div>
+    <div class="keyboard-row">
+        <button data-value="7">7</button>
+        <button data-value="6">6</button>
+        <button data-value="5">5</button>
+        <button data-value="4">4</button>
+    </div>
+    <div class="keyboard-row">
+        <button data-value="3">3</button>
+        <button data-value="2">2</button>
+        <button data-value="1">1</button>
+        <button data-value="M">M</button>
+    </div>
+</div>
+<script src="score.js"></script>
+</body>
 </html>
