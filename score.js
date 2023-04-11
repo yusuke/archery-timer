@@ -103,6 +103,7 @@ onScreenKeyboardBtns.forEach(btn => {
                 moveToNextInput({ target: currentInput });
             }
         }
+        setTimeout(calculateScore, 50);
     });
 });
 
@@ -140,7 +141,6 @@ const initScoreTable = () => {
     // Add event listeners to input elements
     const inputs = scoreTable.querySelectorAll("input");
     inputs.forEach(input => {
-        input.addEventListener("input", calculateScore);
         input.addEventListener("focus", () => {
             input.select();
         });
