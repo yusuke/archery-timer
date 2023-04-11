@@ -21,7 +21,7 @@ const calculateScore = () => {
         const total = sum1 + sum2;
 
         scoreTable.rows[endIndex].cells[4].textContent = sum1 || "0"; // 1本目〜3本目の計
-        scoreTable.rows[endIndex + 1].cells[4].textContent = sum2 || "0"; // 4本目〜6本目の計
+        scoreTable.rows[endIndex + 1].cells[3].textContent = sum2 || "0"; // 4本目〜6本目の計
         totalScore += total;
 
         scoreTable.rows[endIndex].cells[5].textContent = total; // 6本計
@@ -119,7 +119,7 @@ const initScoreTable = () => {
         const row = scoreTable.insertRow();
         if (i % 2 === 0) {
             row.innerHTML = `
-                <td>${(i / 2) + 1}</td>
+                <td rowspan="2">${(i / 2) + 1}</td>
                 <td><input type="text" maxlength="2" size="2" readonly></td>
                 <td><input type="text" maxlength="2" size="2" readonly></td>
                 <td><input type="text" maxlength="2" size="2" readonly></td>
@@ -129,7 +129,6 @@ const initScoreTable = () => {
             `;
         } else {
             row.innerHTML = `
-                <td></td>
                 <td><input type="text" maxlength="2" size="2" readonly></td>
                 <td><input type="text" maxlength="2" size="2" readonly></td>
                 <td><input type="text" maxlength="2" size="2" readonly></td>

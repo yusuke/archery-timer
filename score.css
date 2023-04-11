@@ -31,3 +31,24 @@ td {
     max-height: calc(100vh - 150px); /* Adjust the height to leave enough space for the keyboard */
     overflow-y: auto;
 }
+
+#score-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#score-table td:nth-child(1){
+    width: 5%;
+}
+
+#score-table td:nth-child(2),
+#score-table td:nth-child(3),
+#score-table td:nth-child(4) {
+    width: 10%;
+}
+
+#score-table td:nth-child(5),
+#score-table td:nth-child(6),
+#score-table td:nth-child(7) {
+    width: 15%;
+}
