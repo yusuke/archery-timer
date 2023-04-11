@@ -32,14 +32,42 @@ const calculateScore = () => {
         scoreTable.rows[endIndex].cells[5].textContent = total; // 6本計
         scoreTable.rows[endIndex].cells[6].textContent = totalScore;
     }
+    updateStatistics();
 };
+const updateStatistics = () => {
+    const inputs = Array.from(document.getElementById("score-table").querySelectorAll("input"));
+    let hitCount = 0;
+    let xCount = 0;
+    let tenCount = 0;
+
+    inputs.forEach((input) => {
+        const value = input.value;
+        if (value === "X") {
+            xCount++;
+        } else if (value === "10") {
+            tenCount++;
+        }
+        if (value !== "M" && value !== "") {
+            hitCount++;
+        }
+    });
+
+    // 集計結果を表示する要素を追加する
+    const hitCountElement = document.getElementById("hit-count");
+    const xCountElement = document.getElementById("x-count");
+    const tenCountElement = document.getElementById("ten-count");
+
+    hitCountElement.textContent = hitCount;
+    xCountElement.textContent = xCount;
+    tenCountElement.textContent = tenCount;
+};
+
 
 const moveToNextInput = (e) => {
     if (e.key === "Backspace" || e.key === "Delete") {
         return;
     }
     const target = e.target;
-    const value = target.value;
     const inputs = Array.from(document.getElementById("score-table").querySelectorAll("input"));
     const index = inputs.indexOf(target);
     if (index < inputs.length - 1) {
@@ -117,6 +145,12 @@ const initScoreTable = () => {
         input.addEventListener("keyup", moveToNextInput);
         input.addEventListener("keyup", handleBackspace);
         input.addEventListener("input", calculateScore);
+        input.addEventListener("focus", () => {
+            input.select();
+        });
+        input.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+        });
     });
 };
 
@@ -131,3 +165,8 @@ const adjustScoreWrapperHeight = () => {
 };
 
 adjustScoreWrapperHeight();
+
+document.addEventListener("DOMContentLoaded", () => {
+    const firstInput = document.getElementById("score-table").querySelector("input");
+    firstInput.focus();
+});
