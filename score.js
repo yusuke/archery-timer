@@ -49,12 +49,12 @@ const updateStatistics = () => {
 
     // 集計結果を表示する要素を追加する
     const hitCountElement = document.getElementById("hit-count");
-    const xCountElement = document.getElementById("x-count");
     const tenCountElement = document.getElementById("ten-count");
+    const xCountElement = document.getElementById("x-count");
 
     hitCountElement.textContent = hitCount;
-    xCountElement.textContent = xCount;
     tenCountElement.textContent = tenCount;
+    xCountElement.textContent = xCount;
 };
 
 
