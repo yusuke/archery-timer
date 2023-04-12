@@ -141,12 +141,6 @@ const initScoreTable = () => {
     // Add event listeners to input elements
     const inputs = scoreTable.querySelectorAll("input");
     inputs.forEach(input => {
-        input.addEventListener("focus", () => {
-            input.select();
-        });
-        input.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-        });
         input.addEventListener("click", handleInputClick);
     });
 };
