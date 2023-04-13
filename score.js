@@ -1,6 +1,5 @@
-
 const scoreValue = (input) => {
-    const value = input.value.toUpperCase();
+    const value = input.textContent.toUpperCase();
     if (value === "X") return 10;
     if (value === "M") return 0;
     const intValue = parseInt(value);
@@ -13,8 +12,8 @@ const calculateScore = () => {
     let totalScore = 0;
     for (let i = 0; i < 6; i++) {
         const endIndex = i * 2;
-        const inputs1 = scoreTable.rows[endIndex].querySelectorAll("input");
-        const inputs2 = scoreTable.rows[endIndex + 1].querySelectorAll("input");
+        const inputs1 = scoreTable.rows[endIndex].querySelectorAll(".shot");
+        const inputs2 = scoreTable.rows[endIndex + 1].querySelectorAll(".shot");
 
         const sum1 = Array.from(inputs1).reduce((acc, input) => acc + (scoreValue(input) || 0), 0);
         const sum2 = Array.from(inputs2).reduce((acc, input) => acc + (scoreValue(input) || 0), 0);
@@ -30,20 +29,19 @@ const calculateScore = () => {
     updateStatistics();
 };
 const updateStatistics = () => {
-    const inputs = Array.from(document.getElementById("score-table").querySelectorAll("input"));
     let hitCount = 0;
     let xCount = 0;
     let tenCount = 0;
 
     inputs.forEach((input) => {
-        const value = input.value;
+        const value = input.innerText;
+        if (value === "X" || (0 < value && value <= 10)) {
+            hitCount++;
+        }
         if (value === "X") {
             xCount++;
         } else if (value === "10") {
             tenCount++;
-        }
-        if (value !== "M" && value !== "") {
-            hitCount++;
         }
     });
 
@@ -57,32 +55,28 @@ const updateStatistics = () => {
     xCountElement.textContent = xCount;
 };
 
-
-const moveToNextInput = (e) => {
-    if (e.key === "Backspace" || e.key === "Delete") {
-        return;
-    }
-    const target = e.target;
-    const inputs = Array.from(document.getElementById("score-table").querySelectorAll("input"));
-    const index = inputs.indexOf(target);
-    if (index < inputs.length - 1) {
-        inputs[index + 1].focus();
-    }
-};
-
 const keyboard = document.getElementById("keyboard");
 
 const onScreenKeyboardBtns = keyboard.querySelectorAll("button");
 
 const moveFocus = (direction) => {
-    const inputs = Array.from(document.getElementById("score-table").querySelectorAll("input"));
-    const currentIndex = inputs.indexOf(document.activeElement);
-    const newIndex = currentIndex + direction;
+    const newIndex = focusIndex + direction;
 
     if (newIndex >= 0 && newIndex < inputs.length) {
-        inputs[newIndex].focus();
+        focus(inputs[newIndex]);
+        unfocus(inputs[focusIndex]);
+        focusIndex = newIndex;
     }
 };
+
+function focus(elem) {
+    elem.style.backgroundColor = "yellow";
+}
+
+function unfocus(elem) {
+    elem.style.backgroundColor = "";
+
+}
 
 onScreenKeyboardBtns.forEach(btn => {
     btn.addEventListener("mousedown", function (e) {
@@ -96,12 +90,8 @@ onScreenKeyboardBtns.forEach(btn => {
         } else if (value === "➡️") {
             moveFocus(1);
         } else {
-            const currentInput = document.activeElement;
-            if (currentInput.tagName === "INPUT") {
-                currentInput.value = value;
-                currentInput.dispatchEvent(new Event('input'));
-                moveToNextInput({ target: currentInput });
-            }
+            inputs[focusIndex].innerText = value;
+            moveFocus(1);
         }
         setTimeout(calculateScore, 50);
     });
@@ -111,8 +101,19 @@ document.body.appendChild(keyboard);
 
 let focusInput = null;
 const handleInputClick = (e) => {
-    focusInput = e.target;
+    for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i] === e.target) {
+            console.log(e.target);
+            focusInput = e.target;
+            unfocus(inputs[focusIndex]);
+            focusIndex = i;
+            focus(inputs[focusIndex]);
+            break;
+        }
+    }
 };
+let inputs;
+let focusIndex = 0;
 const initScoreTable = () => {
     const scoreTable = document.getElementById("score-table");
 
@@ -121,28 +122,30 @@ const initScoreTable = () => {
         if (i % 2 === 0) {
             row.innerHTML = `
                 <td rowspan="2">${(i / 2) + 1}</td>
-                <td><input type="text" maxlength="2" size="2" readonly></td>
-                <td><input type="text" maxlength="2" size="2" readonly></td>
-                <td><input type="text" maxlength="2" size="2" readonly></td>
+                <td class="shot">&nbsp;</td>
+                <td class="shot">&nbsp;</td>
+                <td class="shot">&nbsp;</td>
                 <td></td>
                 <td rowspan="2"></td>
                 <td rowspan="2"></td>
             `;
         } else {
             row.innerHTML = `
-                <td><input type="text" maxlength="2" size="2" readonly></td>
-                <td><input type="text" maxlength="2" size="2" readonly></td>
-                <td><input type="text" maxlength="2" size="2" readonly></td>
+                <td class="shot">&nbsp;</td>
+                <td class="shot">&nbsp;</td>
+                <td class="shot">&nbsp;</td>
                 <td></td>
             `;
         }
     }
 
     // Add event listeners to input elements
-    const inputs = scoreTable.querySelectorAll("input");
+    inputs = Array.from(document.getElementById("score-table").querySelectorAll(".shot"));
     inputs.forEach(input => {
         input.addEventListener("click", handleInputClick);
     });
+    focus(inputs[0]);
+
 };
 
 initScoreTable();
@@ -155,8 +158,3 @@ const adjustScoreWrapperHeight = () => {
 };
 
 adjustScoreWrapperHeight();
-
-document.addEventListener("DOMContentLoaded", () => {
-    const firstInput = document.getElementById("score-table").querySelector("input");
-    firstInput.focus();
-});
