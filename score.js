@@ -55,9 +55,7 @@ const updateStatistics = () => {
     xCountElement.textContent = xCount;
 };
 
-const keyboard = document.getElementById("keyboard");
 
-const onScreenKeyboardBtns = keyboard.querySelectorAll("button");
 
 const moveFocus = (direction) => {
     const newIndex = focusIndex + direction;
@@ -70,26 +68,27 @@ const moveFocus = (direction) => {
 };
 
 function focus(elem) {
-    elem.style.backgroundColor = "yellow";
+    elem.classList.add("inner-outline");
 }
 
 function unfocus(elem) {
-    elem.style.backgroundColor = "";
+    elem.classList.remove("inner-outline");
 
 }
 
+const keyboard = document.getElementById("keyboard");
+
+const onScreenKeyboardBtns = keyboard.querySelectorAll("td");
+
 onScreenKeyboardBtns.forEach(btn => {
-    btn.addEventListener("mousedown", function (e) {
+    btn.addEventListener("click", function (e) {
         e.preventDefault();
-    });
-    btn.addEventListener("click", function () {
         const value = this.dataset.value;
 
-        if (value === "⬅️") {
+        if (value === "⌫") {
+            inputs[focusIndex].innerText = "";
             moveFocus(-1);
-        } else if (value === "➡️") {
-            moveFocus(1);
-        } else {
+        }else {
             inputs[focusIndex].innerText = value;
             moveFocus(1);
         }
@@ -99,12 +98,10 @@ onScreenKeyboardBtns.forEach(btn => {
 
 document.body.appendChild(keyboard);
 
-let focusInput = null;
 const handleInputClick = (e) => {
+    e.preventDefault();
     for (let i = 0; i < inputs.length; i++) {
         if (inputs[i] === e.target) {
-            console.log(e.target);
-            focusInput = e.target;
             unfocus(inputs[focusIndex]);
             focusIndex = i;
             focus(inputs[focusIndex]);
@@ -154,7 +151,7 @@ const adjustScoreWrapperHeight = () => {
     const scoreWrapper = document.querySelector('.score-wrapper');
     const keyboardHeight = keyboard.offsetHeight;
 
-    scoreWrapper.style.maxHeight = `calc(100vh - ${keyboardHeight + 100}px)`; // 50px for additional spacing
+    scoreWrapper.style.maxHeight = `calc(100vh - ${keyboardHeight + 50}px)`;
 };
 
 adjustScoreWrapperHeight();
