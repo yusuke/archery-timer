@@ -59,28 +59,27 @@ input:focus {
     cursor: pointer;
 }
 
-.yellowButton {
-    height:50px;
+.yellow {
     background-color: yellow;
     color: black;
 }
 
-.redButton {
+.red {
     background-color: red;
     color: white;
 }
 
-.blueButton {
+.blue {
     background-color: blue;
     color: white;
 }
 
-.blackButton {
+.black {
     background-color: black;
     color: white;
 }
 
-.whiteButton {
+.white {
     background-color: white;
     color: black;
 }

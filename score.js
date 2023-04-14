@@ -86,15 +86,34 @@ onScreenKeyboardBtns.forEach(btn => {
         const value = this.dataset.value;
 
         if (value === "⌫") {
+            inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
             inputs[focusIndex].innerText = "";
             moveFocus(-1);
         }else {
+            inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
             inputs[focusIndex].innerText = value;
+            inputs[focusIndex].classList.add(getColorClassName(value))
+
             moveFocus(1);
         }
         setTimeout(calculateScore, 50);
     });
 });
+function getColorClassName(value){
+    if (value === "X" || value === "10" || value === "9") {
+        return "yellow";
+    }
+    if (value === "8" || value === "7") {
+        return "red";
+    }
+    if (value === "6" || value === "5") {
+        return "blue";
+    }
+    if (value === "4" || value === "3") {
+        return "black";
+    }
+    return "white";
+}
 
 document.body.appendChild(keyboard);
 
