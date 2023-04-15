@@ -77,7 +77,6 @@ function unfocus(elem) {
 
 }
 
-const keyboard = document.getElementById("keyboard");
 
 const onScreenKeyboardBtns = keyboard.querySelectorAll("td");
 
@@ -121,15 +120,16 @@ function getColorClassName(value) {
     return "white-circle";
 }
 
-document.body.appendChild(keyboard);
 
 const handleInputClick = (e) => {
     e.preventDefault();
     for (let i = 0; i < inputs.length; i++) {
-        if (inputs[i] === e.target) {
-            unfocus(inputs[focusIndex]);
-            focusIndex = i;
-            focus(inputs[focusIndex]);
+        if (inputs[i] === e.target || inputs[i].innerText.trim() === "") {
+            if (i !== focusIndex) {
+                unfocus(inputs[focusIndex]);
+                focusIndex = i;
+                focus(inputs[focusIndex]);
+            }
             break;
         }
     }
