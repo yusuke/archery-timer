@@ -42,6 +42,10 @@ input:focus {
     background-color: yellow;
 }
 
+.over50 {
+    color: red;
+}
+
 #keyboard td {
     font-size: 1.3rem;
     width: 18%;

@@ -12,8 +12,7 @@ const calculateScore = () => {
     let totalScore = 0;
     for (let i = 0; i < 6; i++) {
         const endIndex = i * 2;
-        const startIndex = i*6;
-
+        const startIndex = i * 6;
 
         let firstThree = inputs.slice(startIndex, startIndex + 3);
         const sum1 = sumThree(firstThree);
@@ -27,15 +26,28 @@ const calculateScore = () => {
         scoreTable.rows[endIndex + 1].cells[3].textContent = sum2Filled ? sum2 : ""; // 4-6 sum
         totalScore += total;
         scoreTable.rows[endIndex].cells[5].textContent = sum1Filled || sum2Filled ? total : ""; // 6本計
+        const endOver50 = total >= 50;
+        if (endOver50) {
+            scoreTable.rows[endIndex].cells[5].classList.add("over50");
+        } else {
+            scoreTable.rows[endIndex].cells[5].classList.remove("over50");
+        }
         scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? totalScore : "";
-
+        const totalOver50 = totalScore >= 50 * (i + 1);
+        if (totalOver50) {
+            scoreTable.rows[endIndex].cells[6].classList.add("over50");
+        } else {
+            scoreTable.rows[endIndex].cells[6].classList.remove("over50");
+        }
     }
     updateStatistics();
 };
-function sumThree(elems){
+
+function sumThree(elems) {
     return scoreValue(elems[0]) + scoreValue(elems[1]) + scoreValue(elems[2])
 }
-function isFilled(elems){
+
+function isFilled(elems) {
     return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
 }
 
@@ -111,7 +123,7 @@ onScreenKeyboardBtns.forEach(btn => {
             }
             setTimeout(calculateScore, 50);
         });
-        }
+    }
 
 });
 
