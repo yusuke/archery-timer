@@ -40,7 +40,9 @@ const updateStatistics = () => {
         }
         if (value === "X") {
             xCount++;
-        } else if (value === "10") {
+            tenCount++;
+        }
+        if (value === "10") {
             tenCount++;
         }
     });
