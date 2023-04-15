@@ -3,7 +3,7 @@ const scoreValue = (input) => {
     if (value === "X") return 10;
     if (value === "M") return 0;
     const intValue = parseInt(value);
-    if (isNaN(intValue) || intValue < 0 || intValue > 10) return null;
+    if (isNaN(intValue) || intValue < 0 || intValue > 10) return 0;
     return intValue;
 };
 
@@ -12,22 +12,33 @@ const calculateScore = () => {
     let totalScore = 0;
     for (let i = 0; i < 6; i++) {
         const endIndex = i * 2;
-        const inputs1 = scoreTable.rows[endIndex].querySelectorAll(".shot");
-        const inputs2 = scoreTable.rows[endIndex + 1].querySelectorAll(".shot");
+        const startIndex = i*6;
 
-        const sum1 = Array.from(inputs1).reduce((acc, input) => acc + (scoreValue(input) || 0), 0);
-        const sum2 = Array.from(inputs2).reduce((acc, input) => acc + (scoreValue(input) || 0), 0);
+
+        let firstThree = inputs.slice(startIndex, startIndex + 3);
+        const sum1 = sumThree(firstThree);
+        let laterThree = inputs.slice(startIndex + 3, startIndex + 6);
+        const sum2 = sumThree(laterThree);
+        const sum1Filled = isFilled(firstThree)
+        const sum2Filled = isFilled(laterThree)
         const total = sum1 + sum2;
 
-        scoreTable.rows[endIndex].cells[4].textContent = sum1 || "0"; // 1本目〜3本目の計
-        scoreTable.rows[endIndex + 1].cells[3].textContent = sum2 || "0"; // 4本目〜6本目の計
+        scoreTable.rows[endIndex].cells[4].textContent = sum1Filled ? sum1 : ""; // 1-3 sum
+        scoreTable.rows[endIndex + 1].cells[3].textContent = sum2Filled ? sum2 : ""; // 4-6 sum
         totalScore += total;
+        scoreTable.rows[endIndex].cells[5].textContent = sum1Filled || sum2Filled ? total : ""; // 6本計
+        scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? totalScore : "";
 
-        scoreTable.rows[endIndex].cells[5].textContent = total; // 6本計
-        scoreTable.rows[endIndex].cells[6].textContent = totalScore;
     }
     updateStatistics();
 };
+function sumThree(elems){
+    return scoreValue(elems[0]) + scoreValue(elems[1]) + scoreValue(elems[2])
+}
+function isFilled(elems){
+    return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
+}
+
 const updateStatistics = () => {
     let hitCount = 0;
     let xCount = 0;
@@ -89,7 +100,7 @@ onScreenKeyboardBtns.forEach(btn => {
 
             if (value === "⌫") {
                 inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
-                inputs[focusIndex].innerText = "";
+                inputs[focusIndex].innerHTML = "&nbsp;";
                 moveFocus(-1);
             } else {
                 inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
