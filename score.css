@@ -91,7 +91,7 @@ input:focus {
     background-image: radial-gradient(circle, white 50%, transparent 5%); /* 丸い印の背景画像を生成 */
     background-repeat: no-repeat;
     background-position: -0px 0; /* 背景画像の位置を調整 */
-    color:white;
+    color:black;
 }
 .yellow {
     background-color: yellow;
