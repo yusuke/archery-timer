@@ -59,6 +59,40 @@ input:focus {
     cursor: pointer;
 }
 
+.yellow-circle {
+    position:relative;
+    background-image: radial-gradient(circle, #ffdf00 50%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-repeat: no-repeat;
+    background-position: -0px 0; /* 背景画像の位置を調整 */
+}
+.red-circle {
+    position:relative;
+    background-image: radial-gradient(circle, red 50%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-repeat: no-repeat;
+    background-position: -0px 0; /* 背景画像の位置を調整 */
+    color:white;
+}
+.blue-circle {
+    position:relative;
+    background-image: radial-gradient(circle, blue 50%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-repeat: no-repeat;
+    background-position: -0px 0; /* 背景画像の位置を調整 */
+    color:white;
+}
+.black-circle {
+    position:relative;
+    background-image: radial-gradient(circle, black 50%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-repeat: no-repeat;
+    background-position: -0px 0; /* 背景画像の位置を調整 */
+    color:white;
+}
+.white-circle {
+    position:relative;
+    background-image: radial-gradient(circle, white 50%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-repeat: no-repeat;
+    background-position: -0px 0; /* 背景画像の位置を調整 */
+    color:white;
+}
 .yellow {
     background-color: yellow;
     color: black;

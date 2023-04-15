@@ -101,18 +101,18 @@ onScreenKeyboardBtns.forEach(btn => {
 });
 function getColorClassName(value){
     if (value === "X" || value === "10" || value === "9") {
-        return "yellow";
+        return "yellow-circle";
     }
     if (value === "8" || value === "7") {
-        return "red";
+        return "red-circle";
     }
     if (value === "6" || value === "5") {
-        return "blue";
+        return "blue-circle";
     }
     if (value === "4" || value === "3") {
-        return "black";
+        return "black-circle";
     }
-    return "white";
+    return "white-circle";
 }
 
 document.body.appendChild(keyboard);
