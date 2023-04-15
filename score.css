@@ -20,7 +20,7 @@ td {
 }
 
 #keyboard{
-    width: 80%;
+    width: 100%;
     border: none;
     margin-left: auto;
     margin-right: auto;
@@ -44,7 +44,7 @@ input:focus {
 
 #keyboard td {
     font-size: 1.3rem;
-    width: 20%;
+    width: 18%;
     height: 50px;
     margin: 2px;
     text-align: center;
@@ -58,7 +58,14 @@ input:focus {
     -ms-user-select: none;
     cursor: pointer;
 }
-
+.keyboard-left-space{
+    border:none !important;
+    width:10% !important;
+}
+.keyboard-backspace-left{
+    border:none !important;
+    width:3% !important;
+}
 .yellow-circle {
     position:relative;
     background-image: radial-gradient(circle, #ffdf00 47%, transparent 5%); /* 丸い印の背景画像を生成 */
@@ -90,7 +97,7 @@ input:focus {
     color:black;
 }
 .yellow {
-    background-color: yellow;
+    background-color: #ffdf00;
     color: black;
 }
 

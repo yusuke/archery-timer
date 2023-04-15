@@ -58,7 +58,6 @@ const updateStatistics = () => {
 };
 
 
-
 const moveFocus = (direction) => {
     const newIndex = focusIndex + direction;
 
@@ -83,25 +82,30 @@ const keyboard = document.getElementById("keyboard");
 const onScreenKeyboardBtns = keyboard.querySelectorAll("td");
 
 onScreenKeyboardBtns.forEach(btn => {
-    btn.addEventListener("click", function (e) {
-        e.preventDefault();
-        const value = this.dataset.value;
+    if (btn.dataset.value) {
 
-        if (value === "⌫") {
-            inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
-            inputs[focusIndex].innerText = "";
-            moveFocus(-1);
-        }else {
-            inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
-            inputs[focusIndex].innerText = value;
-            inputs[focusIndex].classList.add(getColorClassName(value))
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const value = this.dataset.value;
 
-            moveFocus(1);
+            if (value === "⌫") {
+                inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
+                inputs[focusIndex].innerText = "";
+                moveFocus(-1);
+            } else {
+                inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
+                inputs[focusIndex].innerText = value;
+                inputs[focusIndex].classList.add(getColorClassName(value))
+
+                moveFocus(1);
+            }
+            setTimeout(calculateScore, 50);
+        });
         }
-        setTimeout(calculateScore, 50);
-    });
+
 });
-function getColorClassName(value){
+
+function getColorClassName(value) {
     if (value === "X" || value === "10" || value === "9") {
         return "yellow-circle";
     }
