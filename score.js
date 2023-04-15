@@ -1,6 +1,10 @@
+const scoreTable = document.getElementById("score-table");
+const hitCountElement = document.getElementById("hit-count");
+const tenCountElement = document.getElementById("ten-count");
+const xCountElement = document.getElementById("x-count");
+
 const calculateScore = () => {
-    const scoreTable = document.getElementById("score-table");
-    let totalScore = 0;
+    let runningTotal = 0;
     for (let i = 0; i < 6; i++) {
         const endIndex = i * 2;
         const startIndex = i * 6;
@@ -15,7 +19,7 @@ const calculateScore = () => {
 
         scoreTable.rows[endIndex].cells[4].textContent = sum1Filled ? sum1 : ""; // 1-3 sum
         scoreTable.rows[endIndex + 1].cells[3].textContent = sum2Filled ? sum2 : ""; // 4-6 sum
-        totalScore += total;
+        runningTotal += total;
         scoreTable.rows[endIndex].cells[5].textContent = sum1Filled || sum2Filled ? total : ""; // 6本計
         const endOver50 = total >= 50;
         if (endOver50) {
@@ -23,8 +27,8 @@ const calculateScore = () => {
         } else {
             scoreTable.rows[endIndex].cells[5].classList.remove("over50");
         }
-        scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? totalScore : "";
-        const totalOver50 = totalScore >= 50 * (i + 1);
+        scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? runningTotal : "";
+        const totalOver50 = runningTotal >= 50 * (i + 1);
         if (totalOver50) {
             scoreTable.rows[endIndex].cells[6].classList.add("over50");
         } else {
@@ -70,11 +74,6 @@ const updateStatistics = () => {
             tenCount++;
         }
     });
-
-    // 集計結果を表示する要素を追加する
-    const hitCountElement = document.getElementById("hit-count");
-    const tenCountElement = document.getElementById("ten-count");
-    const xCountElement = document.getElementById("x-count");
 
     hitCountElement.textContent = hitCount;
     tenCountElement.textContent = tenCount;
@@ -160,7 +159,6 @@ const handleInputClick = (e) => {
 let inputs;
 let focusIndex = 0;
 const initScoreTable = () => {
-    const scoreTable = document.getElementById("score-table");
 
     for (let i = 1; i <= 6; i++) {
         scoreTable.insertRow()
@@ -183,7 +181,7 @@ const initScoreTable = () => {
     }
 
     // Add event listeners to input elements
-    inputs = Array.from(document.getElementById("score-table").querySelectorAll(".shot"));
+    inputs = Array.from(scoreTable.querySelectorAll(".shot"));
     inputs.forEach(input => {
         input.addEventListener("click", handleInputClick);
     });

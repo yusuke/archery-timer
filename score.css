@@ -72,29 +72,25 @@ input:focus {
 }
 .yellow-circle {
     position:relative;
-    background-image: radial-gradient(circle, #ffdf00 47%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-image: radial-gradient(circle, #ffdf00 46%, transparent 5%);
     background-repeat: no-repeat;
-    background-position: -0px 0; /* 背景画像の位置を調整 */
 }
 .red-circle {
     position:relative;
-    background-image: radial-gradient(circle, red 47%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-image: radial-gradient(circle, red 46%, transparent 5%);
     background-repeat: no-repeat;
-    background-position: -0px 0; /* 背景画像の位置を調整 */
     color:white;
 }
 .blue-circle {
     position:relative;
-    background-image: radial-gradient(circle, blue 47%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-image: radial-gradient(circle, blue 46%, transparent 5%);
     background-repeat: no-repeat;
-    background-position: -0px 0; /* 背景画像の位置を調整 */
     color:white;
 }
 .black-circle {
     position:relative;
-    background-image: radial-gradient(circle, black 47%, transparent 5%); /* 丸い印の背景画像を生成 */
+    background-image: radial-gradient(circle, black 46%, transparent 5%);
     background-repeat: no-repeat;
-    background-position: -0px 0; /* 背景画像の位置を調整 */
     color:white;
 }
 .white-circle {
@@ -155,6 +151,6 @@ input:focus {
     width: 20%;
 }
 .inner-outline {
-    outline: 2px solid red;
+    outline: 3px solid red;
     padding: 1px;
 }
