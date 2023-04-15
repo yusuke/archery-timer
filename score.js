@@ -1,12 +1,3 @@
-const scoreValue = (input) => {
-    const value = input.textContent.toUpperCase();
-    if (value === "X") return 10;
-    if (value === "M") return 0;
-    const intValue = parseInt(value);
-    if (isNaN(intValue) || intValue < 0 || intValue > 10) return 0;
-    return intValue;
-};
-
 const calculateScore = () => {
     const scoreTable = document.getElementById("score-table");
     let totalScore = 0;
@@ -43,13 +34,23 @@ const calculateScore = () => {
     updateStatistics();
 };
 
+function isFilled(elems) {
+    return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
+}
+
 function sumThree(elems) {
     return scoreValue(elems[0]) + scoreValue(elems[1]) + scoreValue(elems[2])
 }
 
-function isFilled(elems) {
-    return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
-}
+const scoreValue = (input) => {
+    const value = input.textContent.toUpperCase();
+    if (value === "X") return 10;
+    if (value === "M") return 0;
+    const intValue = parseInt(value);
+    if (isNaN(intValue) || intValue < 0 || intValue > 10) return 0;
+    return intValue;
+};
+
 
 const updateStatistics = () => {
     let hitCount = 0;
@@ -99,7 +100,6 @@ function unfocus(elem) {
     elem.classList.remove("inner-outline");
 
 }
-
 
 const onScreenKeyboardBtns = keyboard.querySelectorAll("td");
 
@@ -162,11 +162,10 @@ let focusIndex = 0;
 const initScoreTable = () => {
     const scoreTable = document.getElementById("score-table");
 
-    for (let i = 0; i < 12; i++) {
-        const row = scoreTable.insertRow();
-        if (i % 2 === 0) {
-            row.innerHTML = `
-                <td rowspan="2">${(i / 2) + 1}</td>
+    for (let i = 1; i <= 6; i++) {
+        scoreTable.insertRow()
+            .innerHTML = `
+                <td rowspan="2">${i}</td>
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
@@ -174,14 +173,13 @@ const initScoreTable = () => {
                 <td rowspan="2"></td>
                 <td rowspan="2"></td>
             `;
-        } else {
-            row.innerHTML = `
+        scoreTable.insertRow()
+            .innerHTML = `
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
                 <td></td>
             `;
-        }
     }
 
     // Add event listeners to input elements
@@ -194,12 +192,3 @@ const initScoreTable = () => {
 };
 
 initScoreTable();
-const adjustScoreWrapperHeight = () => {
-    const keyboard = document.getElementById('keyboard');
-    const scoreWrapper = document.querySelector('.score-wrapper');
-    const keyboardHeight = keyboard.offsetHeight;
-
-    scoreWrapper.style.maxHeight = `calc(100vh - ${keyboardHeight + 50}px)`;
-};
-
-adjustScoreWrapperHeight();
