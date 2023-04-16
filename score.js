@@ -104,25 +104,32 @@ let touchStartX = 0;
 let touchEndX = 0;
 let flickThreshold = 30; // ここでフリックの幅を設定します（ピクセル単位）
 let flickCounter = 0;
+let flickMinIndex = 0;
 
 function handleTouchStart(event) {
+    flickMinIndex = focusIndex - focusIndex % 6;
     touchStartX = event.touches[0].clientX;
     flickCounter = 0;
     buttonPressed(event);
 }
 
 function handleTouchMove(event) {
-    if (focusIndex % 6 === 0) {
-        return;
-    }
     touchEndX = event.touches[0].clientX;
 
     let distance = touchEndX - touchStartX;
     let numberOfFlicks = Math.floor(distance / flickThreshold);
 
+    if (numberOfFlicks === flickCounter) {
+        return;
+    }
 
-    if (numberOfFlicks > flickCounter) {
+    if (numberOfFlicks > flickCounter && focusIndex < (flickMinIndex + 6)) {
         buttonPressed(event);
+        flickCounter = numberOfFlicks;
+    }
+    if (-1 <= numberOfFlicks&&  numberOfFlicks < flickCounter && flickMinIndex < focusIndex) {
+        backSpace();
+        calculateScore();
         flickCounter = numberOfFlicks;
     }
 }
@@ -146,16 +153,22 @@ function buttonPressed(e) {
     const value = e.target.dataset.value;
 
     if (value === "del") {
-        inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
-        inputs[focusIndex].innerHTML = "&nbsp;";
-        moveFocus(-1);
+        backSpace();
     } else {
-        inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
-        inputs[focusIndex].innerText = value;
-        inputs[focusIndex].classList.add(getColorClassName(value))
+        setCellValue(inputs[focusIndex], value);
         moveFocus(1);
     }
     setTimeout(calculateScore, 50);
+}
+function setCellValue(inputElem, value){
+    inputElem.classList.remove(getColorClassName(inputElem.innerText))
+    inputElem.innerHTML = value;
+    inputElem.classList.add(getColorClassName(value))
+}
+function backSpace(){
+    setCellValue(inputs[focusIndex], "&nbsp;");
+    moveFocus(-1);
+    setCellValue(inputs[focusIndex], "&nbsp;");
 }
 
 function getColorClassName(value) {
