@@ -19,17 +19,23 @@ td {
     text-align: center;
 }
 
+.score-wrapper {
+    max-height: calc(100vh - 240px); /* Adjust the height to leave enough space for the keyboard */
+    overflow-y: auto;
+}
 #keyboard{
     width: 100%;
     border: none;
     margin-left: auto;
     margin-right: auto;
+    position: fixed;
+    bottom: 2px;
+    left: 0;
+    overflow: auto;
 
 }
 .keyboard-row {
-    /*display: flex;*/
     border-collapse: collapse;
-
     justify-content: center;
 }
 
@@ -62,14 +68,15 @@ input:focus {
     -ms-user-select: none;
     cursor: pointer;
 }
-.keyboard-left-space{
+.keyboard-backspace-left{
     border:none !important;
     width:10% !important;
 }
-.keyboard-backspace-left{
-    border:none !important;
-    width:3% !important;
+.delButton {
+    width: 18% !important;
+    color: black;
 }
+
 .yellow-circle {
     position:relative;
     background-image: radial-gradient(circle, #ffdf00 46%, transparent 5%);
@@ -120,14 +127,6 @@ input:focus {
     background-color: white;
     color: black;
 }
-
-.delButton {
-    font-size: 24px;
-    /*font-family: "sans-serif";*/
-    /*font-size: 100pt;*/
-    color: black;
-}
-
 
 #score-table {
     width: 100%;

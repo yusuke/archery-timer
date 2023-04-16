@@ -100,31 +100,63 @@ function unfocus(elem) {
 
 }
 
+let touchStartX = 0;
+let touchEndX = 0;
+let flickThreshold = 30; // ここでフリックの幅を設定します（ピクセル単位）
+let flickCounter = 0;
+
+function handleTouchStart(event) {
+    touchStartX = event.touches[0].clientX;
+    flickCounter = 0;
+    buttonPressed(event);
+}
+
+function handleTouchMove(event) {
+    if (focusIndex % 6 === 0) {
+        return;
+    }
+    touchEndX = event.touches[0].clientX;
+
+    let distance = touchEndX - touchStartX;
+    let numberOfFlicks = Math.floor(distance / flickThreshold);
+
+
+    if (numberOfFlicks > flickCounter) {
+        buttonPressed(event);
+        flickCounter = numberOfFlicks;
+    }
+}
+
 const onScreenKeyboardBtns = keyboard.querySelectorAll("td");
 
 onScreenKeyboardBtns.forEach(btn => {
+
     if (btn.dataset.value) {
-
-        btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const value = this.dataset.value;
-
-            if (value === "⌫") {
-                inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
-                inputs[focusIndex].innerHTML = "&nbsp;";
-                moveFocus(-1);
-            } else {
-                inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
-                inputs[focusIndex].innerText = value;
-                inputs[focusIndex].classList.add(getColorClassName(value))
-
-                moveFocus(1);
-            }
-            setTimeout(calculateScore, 50);
-        });
+        if ('ontouchstart' in document.documentElement && btn.dataset.value !== "del") {
+            btn.addEventListener('touchstart', handleTouchStart, false);
+            btn.addEventListener('touchmove', handleTouchMove, false);
+        } else {
+            btn.addEventListener("click", buttonPressed);
+        }
     }
-
 });
+
+function buttonPressed(e) {
+    e.preventDefault();
+    const value = e.target.dataset.value;
+
+    if (value === "del") {
+        inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
+        inputs[focusIndex].innerHTML = "&nbsp;";
+        moveFocus(-1);
+    } else {
+        inputs[focusIndex].classList.remove(getColorClassName(inputs[focusIndex].innerText))
+        inputs[focusIndex].innerText = value;
+        inputs[focusIndex].classList.add(getColorClassName(value))
+        moveFocus(1);
+    }
+    setTimeout(calculateScore, 50);
+}
 
 function getColorClassName(value) {
     if (value === "X" || value === "10" || value === "9") {
