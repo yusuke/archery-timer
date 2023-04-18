@@ -93,6 +93,7 @@ const moveFocus = (direction) => {
 
 function focus(elem) {
     elem.classList.add("inner-outline");
+    elem.scrollIntoView({behavior: "smooth", block: "start"});
 }
 
 function unfocus(elem) {
