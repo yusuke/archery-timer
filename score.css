@@ -9,12 +9,12 @@ body {
     overflow-y: auto;
 }
 
-.score-table {
+#score-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.score-table th, td {
+#score-table th, td {
     border: 1px solid black;
     padding: 2px;
     font-size: 1.2rem;
