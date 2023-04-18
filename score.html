@@ -9,11 +9,15 @@
 </head>
 <body>
 <div class="contents">
-    <table id="score-table">
-    </table>
-    <div>Hits: <span id="hit-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;10s: <span id="ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:
-        <span id="x-count">0</span>
+    <div class="round">
+        <table id="score-table">
+        </table>
+        <div>Hits: <span id="hit-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;10s: <span id="ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:
+            <span id="x-count">0</span>
+        </div>
     </div>
+    <button class="button" id="clear-button">Clear</button>
+
 </div>
 <div class="space"></div>
 
@@ -23,8 +27,6 @@
         <td data-value="10" class="yellow">10</td>
         <td data-value="9" class="yellow">9</td>
         <td data-value="8" class="red">8</td>
-        <td class="keyboard-backspace-left"></td>
-        <td data-value="C" class="delButton">C</td>
     </tr>
     <tr class="keyboard-row">
         <td data-value="7" class="red">7</td>

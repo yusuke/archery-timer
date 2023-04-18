@@ -155,13 +155,6 @@ function buttonPressed(e) {
 
     if (value === "del") {
         backSpace();
-    } else if (value === "C") {
-        if (confirm("スコアを消去して良いですか?")) {
-            inputs.forEach(input => setCellValue(input, "&nbsp;"));
-            unfocus(inputs[focusIndex]);
-            focusIndex = 0;
-            focus(inputs[focusIndex]);
-        }
     } else {
         setCellValue(inputs[focusIndex], value);
         moveFocus(1);
@@ -266,3 +259,12 @@ const initScoreTable = () => {
 };
 
 initScoreTable();
+function clearScore(){
+    if (confirm("スコアを消去して良いですか?")) {
+        inputs.forEach(input => setCellValue(input, "&nbsp;"));
+        unfocus(inputs[focusIndex]);
+        focusIndex = 0;
+        focus(inputs[focusIndex]);
+    }
+}
+document.getElementById("clear-button").addEventListener("click", clearScore)

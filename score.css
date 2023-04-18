@@ -157,3 +157,10 @@ body {
     outline: 3px solid red;
     padding: 1px;
 }
+
+.button {
+    font-size: 1.2rem;
+    width:120px;
+    height:45px;
+    border-style: solid;
+}
