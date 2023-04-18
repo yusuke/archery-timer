@@ -25,7 +25,11 @@ body {
     color: red;
 }
 
-#keyboard{
+.space {
+    height: 192px;
+}
+
+#keyboard {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -37,6 +41,7 @@ body {
     z-index: 99;
 
 }
+
 .keyboard-row {
     border-collapse: collapse;
     justify-content: center;
@@ -58,41 +63,48 @@ body {
     -ms-user-select: none;
     cursor: pointer;
 }
-.keyboard-backspace-left{
-    border:none !important;
-    width:10% !important;
+
+.keyboard-backspace-left {
+    border: none !important;
+    width: 10% !important;
 }
+
 .delButton {
     width: 18% !important;
     color: black;
 }
 
 .yellow-circle {
-    position:relative;
+    position: relative;
     background-image: radial-gradient(circle at center, #ffdf00 46%, transparent 5%);
     background-repeat: no-repeat;
 }
+
 .red-circle {
-    position:relative;
+    position: relative;
     background-image: radial-gradient(circle at center, red 46%, transparent 5%);
     background-repeat: no-repeat;
-    color:white;
+    color: white;
 }
+
 .blue-circle {
-    position:relative;
+    position: relative;
     background-image: radial-gradient(circle at center, blue 46%, transparent 5%);
     background-repeat: no-repeat;
-    color:white;
+    color: white;
 }
+
 .black-circle {
-    position:relative;
+    position: relative;
     background-image: radial-gradient(circle at center, black 46%, transparent 5%);
     background-repeat: no-repeat;
-    color:white;
+    color: white;
 }
+
 .white-circle {
-    color:black;
+    color: black;
 }
+
 .yellow {
     background-color: #ffdf00;
     color: black;
@@ -139,6 +151,7 @@ body {
 #score-table td:nth-child(7) {
     width: 20%;
 }
+
 .inner-outline {
     outline: 3px solid red;
     padding: 1px;
