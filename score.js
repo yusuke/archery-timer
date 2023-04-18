@@ -155,11 +155,23 @@ function buttonPressed(e) {
 
     if (value === "del") {
         backSpace();
+    } else if (value === "C") {
+        if (confirm("スコアを消去して良いですか?")) {
+            inputs.forEach(input => setCellValue(input, "&nbsp;"));
+            unfocus(inputs[focusIndex]);
+            focusIndex = 0;
+            focus(inputs[focusIndex]);
+        }
     } else {
         setCellValue(inputs[focusIndex], value);
         moveFocus(1);
     }
+    saveToURL();
     setTimeout(calculateScore, 50);
+}
+function saveToURL(){
+    let score = inputs.map(input => input.textContent.trim()).join('');
+    history.replaceState("", "", `?score=${score}`);
 }
 function setCellValue(inputElem, value){
     inputElem.classList.remove(getColorClassName(inputElem.innerText))
@@ -231,8 +243,26 @@ const initScoreTable = () => {
     inputs.forEach(input => {
         input.addEventListener("click", handleInputClick);
     });
-    focus(inputs[0]);
 
+    const searchParams = new URLSearchParams(window.location.search);
+    // restore state from URL
+    let index = 0;
+    if (searchParams.has("score")) {
+        const scoreString = searchParams.get("score");
+        scoreString.split('').forEach(fillScore => {
+            if (fillScore !== "0") {
+                setCellValue(inputs[index], fillScore);
+                index++;
+            } else {
+                setCellValue(inputs[index - 1], "10");
+            }
+        });
+        calculateScore();
+        focusIndex = ((index) === inputs.length) ? index - 1 : index;
+        focus(inputs[focusIndex]);
+    }else{
+        focus(inputs[0]);
+    }
 };
 
 initScoreTable();

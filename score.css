@@ -72,6 +72,7 @@ body {
 .delButton {
     width: 18% !important;
     color: black;
+    background-color: white;
 }
 
 .yellow-circle {
