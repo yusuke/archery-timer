@@ -272,13 +272,19 @@ function clearScore(){
 }
 document.getElementById("clear-button").addEventListener("click", clearScore);
 function downloadScreenshot() {
-    html2canvas(document.getElementById("scores")).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "score.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+    const targetElement = document.getElementById("scores");
+    const containerElement = document.getElementById("thumbnail");
+
+    html2canvas(targetElement).then(canvas => {
+        const img = document.createElement("img");
+        img.src = canvas.toDataURL("image/png");
+        img.style.width = "200px";
+        img.style.height = "200px";
+        containerElement.childNodes.forEach(elem =>containerElement.removeChild(elem));
+        containerElement.appendChild(img);
     });
 }
+
 document.getElementById("save-button").addEventListener("click", downloadScreenshot);
 
 
