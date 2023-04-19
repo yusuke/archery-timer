@@ -265,6 +265,38 @@ function clearScore(){
         unfocus(inputs[focusIndex]);
         focusIndex = 0;
         focus(inputs[focusIndex]);
+        calculateScore();
+        history.replaceState("", "", `?score=`);
+
     }
 }
-document.getElementById("clear-button").addEventListener("click", clearScore)
+document.getElementById("clear-button").addEventListener("click", clearScore);
+function downloadScreenshot() {
+    html2canvas(document.getElementById("scores")).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "score.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+}
+document.getElementById("save-button").addEventListener("click", downloadScreenshot);
+
+
+// popup menu
+const targetElement = document.getElementById('target-element');
+const popupMenu = document.getElementById('popup-menu');
+
+targetElement.addEventListener('click', (event) => {
+    popupMenu.style.display = (popupMenu.style.display === 'block') ? 'none' : 'block';
+
+    const menuWidth = popupMenu.offsetWidth;
+    const menuHeight = popupMenu.offsetHeight;
+    popupMenu.style.left = `${event.pageX - menuWidth}px`;
+    popupMenu.style.top = `${event.pageY - menuHeight}px`;
+});
+
+document.addEventListener('click', (event) => {
+    if (event.target !== targetElement && event.target !== popupMenu) {
+        popupMenu.style.display = 'none';
+    }
+});
