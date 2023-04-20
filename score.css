@@ -257,7 +257,17 @@ body {
     font-size:1.2em;
     border:none;
 }
-.date-picker{
-    width: 0;
-     border:none;
- }
+
+.date-picker {
+    position: relative;
+    outline: none;
+    width: 1px;
+    color: white;
+    background-color: white;
+    border: none;
+}
+
+.distance {
+    color: black;
+    font-size: 1.2em;
+}

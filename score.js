@@ -259,11 +259,15 @@ const initScoreTable = () => {
     }else{
         focus(inputs[0]);
     }
+    let date;
     if(searchParams.has("date")){
-        document.getElementsByClassName("date")[scoreIndex].innerText= searchParams.get("date");
+        date =  searchParams.get("date");
     }else{
-        document.getElementsByClassName("date")[scoreIndex].innerText= formatDate(new Date());
+        date = formatDate(new Date());
     }
+    document.getElementsByClassName("date")[scoreIndex].innerText= date;
+    document.getElementsByClassName("date-picker")[scoreIndex].value= date;
+
     if(searchParams.has("distance")){
         document.getElementsByClassName("distance")[scoreIndex].innerText= searchParams.get("distance");
     }else{
