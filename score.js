@@ -2,6 +2,7 @@ const scoreTable = document.getElementById("score-table");
 const hitCountElement = document.getElementById("hit-count");
 const tenCountElement = document.getElementById("ten-count");
 const xCountElement = document.getElementById("x-count");
+let scoreIndex = 0;
 
 const calculateScore = () => {
     let runningTotal = 0;
@@ -163,8 +164,10 @@ function buttonPressed(e) {
     setTimeout(calculateScore, 50);
 }
 function saveToURL(){
-    let score = inputs.map(input => input.textContent.trim()).join('');
-    history.replaceState("", "", `?score=${score}`);
+    const score = inputs.map(input => input.textContent.trim()).join('');
+    const date = document.getElementsByClassName("date")[scoreIndex].innerText;
+    const distance = document.getElementsByClassName("distance")[scoreIndex].innerText;
+    history.replaceState("", "", `?date=${date}&distance=${distance}&score=${score}`);
 }
 function setCellValue(inputElem, value){
     inputElem.classList.remove(getColorClassName(inputElem.innerText))
@@ -256,6 +259,16 @@ const initScoreTable = () => {
     }else{
         focus(inputs[0]);
     }
+    if(searchParams.has("date")){
+        document.getElementsByClassName("date")[scoreIndex].innerText= searchParams.get("date");
+    }else{
+        document.getElementsByClassName("date")[scoreIndex].innerText= formatDate(new Date());
+    }
+    if(searchParams.has("distance")){
+        document.getElementsByClassName("distance")[scoreIndex].innerText= searchParams.get("distance");
+    }else{
+        document.getElementsByClassName("distance")[scoreIndex].innerText= "70m";
+    }
 };
 
 initScoreTable();
@@ -267,7 +280,7 @@ function clearScore(){
         focus(inputs[focusIndex]);
         removeThumbnail();
         calculateScore();
-        history.replaceState("", "", `?score=`);
+        saveToURL();
 
     }
 }
@@ -316,3 +329,35 @@ document.addEventListener('click', (event) => {
         popupMenu.style.display = 'none';
     }
 });
+
+function formatDate(date){
+
+    const locale = navigator.language;
+
+    const formatter = new Intl.DateTimeFormat(locale, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+    });
+    return formatter.format(date);
+}
+
+const dateDisplays = document.getElementsByClassName('date');
+const datePickers = document.getElementsByClassName('date-picker');
+
+
+for (let i = 0; i < dateDisplays.length; i++) {
+    const dateDisplay = dateDisplays[i];
+    const datePicker = datePickers[i];
+    dateDisplay.addEventListener('click', () => {
+        datePicker.focus();
+        datePicker.click();
+
+    });
+    datePicker.addEventListener('change', () => {
+        const selectedDate = new Date(datePicker.value);
+        dateDisplay.textContent = formatDate(selectedDate);
+        saveToURL();
+        datePicker.click();
+    });
+}
