@@ -12,7 +12,7 @@
     <div id="scores">
         <div>
             <!--suppress HtmlFormInputWithoutLabel -->
-            <input type="date" class="date-picker"><span class="date"></span>&nbsp;&nbsp;&nbsp;<span class="distance"></span>
+            <input type="date" class="date-picker"><span class="date"></span>&nbsp;&nbsp;&nbsp;<span id="distance" class="distance"></span>
         </div>
         <div class="round">
             <table id="score-table">
@@ -26,7 +26,23 @@
 
     <div id="popup-menu" class="popup-menu">
         <a href="#" id="save-button">スコアを保存用に画像化</a>
+        <hr>
         <a href="#" id="clear-button">スコアを消去</a>
+    </div>
+    <div id="distance-menu" class="popup-menu">
+        <a href="#" id="18m" class="distance-menu-choice">18m</a>
+        <hr>
+        <a href="#" id="30m" class="distance-menu-choice">30m</a>
+        <hr>
+        <a href="#" id="40m" class="distance-menu-choice">40m</a>
+        <hr>
+        <a href="#" id="50m" class="distance-menu-choice">50m</a>
+        <hr>
+        <a href="#" id="60m" class="distance-menu-choice">60m</a>
+        <hr>
+        <a href="#" id="70m" class="distance-menu-choice">70m</a>
+        <hr>
+        <a href="#" id="90m" class="distance-menu-choice">90m</a>
     </div>
 
 </div>
@@ -40,7 +56,7 @@
         <td data-value="8" class="red">8</td>
         <td class="keyboard-backspace-left"></td>
         <td  class="delButton">
-            <div  class="dot-container" id="target-element"></div>
+            <div  class="dot-container" id="dot-menu"></div>
         </td>
 
 

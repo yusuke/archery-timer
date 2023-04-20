@@ -315,11 +315,11 @@ function downloadScreenshot() {
 document.getElementById("save-button").addEventListener("click", downloadScreenshot);
 
 
-// popup menu
-const targetElement = document.getElementById('target-element');
+// dot menu
+const dotMenu = document.getElementById('dot-menu');
 const popupMenu = document.getElementById('popup-menu');
 
-targetElement.addEventListener('click', (event) => {
+dotMenu.addEventListener('click', (event) => {
     popupMenu.style.display = (popupMenu.style.display === 'block') ? 'none' : 'block';
 
     const menuWidth = popupMenu.offsetWidth;
@@ -329,10 +329,37 @@ targetElement.addEventListener('click', (event) => {
 });
 
 document.addEventListener('click', (event) => {
-    if (event.target !== targetElement && event.target !== popupMenu) {
+    if (event.target !== dotMenu && event.target !== popupMenu) {
         popupMenu.style.display = 'none';
     }
 });
+
+// distance menu
+const distance = document.getElementById('distance');
+const distanceMenu = document.getElementById('distance-menu');
+
+distance.addEventListener('click', (event) => {
+    distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
+
+    const menuWidth = distanceMenu.offsetWidth;
+    const menuHeight = distanceMenu.offsetHeight;
+    distanceMenu.style.left = `${event.pageX}px`;
+    distanceMenu.style.top = `${event.pageY}px`;
+});
+
+document.addEventListener('click', (event) => {
+    if (event.target !== distance && event.target !== distanceMenu) {
+        distanceMenu.style.display = 'none';
+    }
+});
+
+Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(
+    elem=>elem.addEventListener('click',(event)=>{
+        distance.innerText = elem.innerText;
+        distanceMenu.style.display = 'none';
+        saveToURL();
+    })
+)
 
 function formatDate(date){
 
