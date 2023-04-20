@@ -121,7 +121,7 @@ function handleTouchMove(event) {
         buttonPressed(event);
         flickCounter = numberOfFlicks;
     }
-    if (-1 <= numberOfFlicks&&  numberOfFlicks < flickCounter && flickMinIndex < focusIndex) {
+    if (-1 <= numberOfFlicks && numberOfFlicks < flickCounter && flickMinIndex < focusIndex) {
         backSpace();
         calculateScore();
         flickCounter = numberOfFlicks;
@@ -155,18 +155,21 @@ function buttonPressed(e) {
     saveToURL();
     setTimeout(calculateScore, 50);
 }
-function saveToURL(){
+
+function saveToURL() {
     const score = inputs.map(input => input.textContent.trim()).join('');
     const date = document.getElementsByClassName("date")[scoreIndex].innerText;
     const distance = document.getElementsByClassName("distance")[scoreIndex].innerText;
     history.replaceState("", "", `?date=${date}&distance=${distance}&score=${score}`);
 }
-function setCellValue(inputElem, value){
+
+function setCellValue(inputElem, value) {
     inputElem.classList.remove(getColorClassName(inputElem.innerText))
     inputElem.innerHTML = value;
     inputElem.classList.add(getColorClassName(value))
 }
-function backSpace(){
+
+function backSpace() {
     setCellValue(inputs[focusIndex], "&nbsp;");
     moveFocus(-1);
     setCellValue(inputs[focusIndex], "&nbsp;");
@@ -207,8 +210,7 @@ let focusIndex = 0;
 const initScoreTable = () => {
 
     for (let i = 1; i <= 6; i++) {
-        scoreTable.insertRow()
-            .innerHTML = `
+        scoreTable.insertRow().innerHTML = `
                 <td rowspan="2">${i}</td>
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
@@ -217,8 +219,7 @@ const initScoreTable = () => {
                 <td rowspan="2"></td>
                 <td rowspan="2"></td>
             `;
-        scoreTable.insertRow()
-            .innerHTML = `
+        scoreTable.insertRow().innerHTML = `
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
@@ -248,27 +249,28 @@ const initScoreTable = () => {
         calculateScore();
         focusIndex = ((index) === inputs.length) ? index - 1 : index;
         focus(inputs[focusIndex]);
-    }else{
+    } else {
         focus(inputs[0]);
     }
     let date;
-    if(searchParams.has("date")){
-        date =  searchParams.get("date");
-    }else{
+    if (searchParams.has("date")) {
+        date = searchParams.get("date");
+    } else {
         date = formatDate(new Date());
     }
-    document.getElementsByClassName("date")[scoreIndex].innerText= date;
-    document.getElementsByClassName("date-picker")[scoreIndex].value= date;
+    document.getElementsByClassName("date")[scoreIndex].innerText = date;
+    document.getElementsByClassName("date-picker")[scoreIndex].value = date;
 
-    if(searchParams.has("distance")){
-        document.getElementsByClassName("distance")[scoreIndex].innerText= searchParams.get("distance");
-    }else{
-        document.getElementsByClassName("distance")[scoreIndex].innerText= "70m";
+    if (searchParams.has("distance")) {
+        document.getElementsByClassName("distance")[scoreIndex].innerText = searchParams.get("distance");
+    } else {
+        document.getElementsByClassName("distance")[scoreIndex].innerText = "70m";
     }
 };
 
 initScoreTable();
-function clearScore(){
+
+function clearScore() {
     if (confirm("スコアを消去して良いですか?")) {
         inputs.forEach(input => setCellValue(input, "&nbsp;"));
         unfocus(inputs[focusIndex]);
@@ -280,10 +282,11 @@ function clearScore(){
 
     }
 }
+
 document.getElementById("clear-button").addEventListener("click", clearScore);
 const scoreElement = document.getElementById("scores");
 
-function removeThumbnail(){
+function removeThumbnail() {
     for (let i = 0; i < scoreElement.children.length; i++) {
         let child = scoreElement.children[i];
         if (child.classList.contains("float-image")) {
@@ -292,6 +295,7 @@ function removeThumbnail(){
     }
 
 }
+
 function downloadScreenshot() {
 
     html2canvas(scoreElement).then(canvas => {
@@ -345,22 +349,18 @@ document.addEventListener('click', (event) => {
     }
 });
 
-Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(
-    elem=>elem.addEventListener('click',(event)=>{
-        distance.innerText = elem.innerText;
-        distanceMenu.style.display = 'none';
-        saveToURL();
-    })
-)
+Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem => elem.addEventListener('click', (event) => {
+    distance.innerText = elem.innerText;
+    distanceMenu.style.display = 'none';
+    saveToURL();
+}))
 
-function formatDate(date){
+function formatDate(date) {
 
     const locale = navigator.language;
 
     const formatter = new Intl.DateTimeFormat(locale, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
+        year: 'numeric', month: 'numeric', day: 'numeric',
     });
     return formatter.format(date);
 }
