@@ -265,23 +265,33 @@ function clearScore(){
         unfocus(inputs[focusIndex]);
         focusIndex = 0;
         focus(inputs[focusIndex]);
+        removeThumbnail();
         calculateScore();
         history.replaceState("", "", `?score=`);
 
     }
 }
 document.getElementById("clear-button").addEventListener("click", clearScore);
-function downloadScreenshot() {
-    const targetElement = document.getElementById("scores");
-    const containerElement = document.getElementById("thumbnail");
+const scoreElement = document.getElementById("scores");
 
-    html2canvas(targetElement).then(canvas => {
+function removeThumbnail(){
+    for (let i = 0; i < scoreElement.children.length; i++) {
+        let child = scoreElement.children[i];
+        if (child.classList.contains("float-image")) {
+            scoreElement.removeChild(child);
+        }
+    }
+
+}
+function downloadScreenshot() {
+
+    html2canvas(scoreElement).then(canvas => {
         const img = document.createElement("img");
         img.src = canvas.toDataURL("image/png");
-        img.style.width = "200px";
-        img.style.height = "200px";
-        containerElement.childNodes.forEach(elem =>containerElement.removeChild(elem));
-        containerElement.appendChild(img);
+
+        img.classList.add("float-image")
+        scoreElement.appendChild(img);
+        scoreElement.addEventListener("click", removeThumbnail);
     });
 }
 

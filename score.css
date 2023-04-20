@@ -241,3 +241,14 @@ body {
     background-repeat: repeat-x;
     background-position: center;
 }
+
+.float-image {
+    width: 200px;
+    height: auto;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    position : absolute;
+    top : 30%;
+    left : 50%;
+    transform : translate(-50%, -50%);
+}
+
