@@ -1,9 +1,7 @@
 const scoreTable = document.getElementById("score-table");
-const hitCountElement = document.getElementById("hit-count");
 const tenCountElement = document.getElementById("ten-count");
 const xCountElement = document.getElementById("x-count");
 let scoreIndex = 0;
-
 const calculateScore = () => {
     let runningTotal = 0;
     for (let i = 0; i < 6; i++) {
@@ -58,15 +56,11 @@ const scoreValue = (input) => {
 
 
 const updateStatistics = () => {
-    let hitCount = 0;
     let xCount = 0;
     let tenCount = 0;
 
     inputs.forEach((input) => {
         const value = input.innerText;
-        if (value === "X" || (0 < value && value <= 10)) {
-            hitCount++;
-        }
         if (value === "X") {
             xCount++;
             tenCount++;
@@ -75,8 +69,6 @@ const updateStatistics = () => {
             tenCount++;
         }
     });
-
-    hitCountElement.textContent = hitCount;
     tenCountElement.textContent = tenCount;
     xCountElement.textContent = xCount;
 };
