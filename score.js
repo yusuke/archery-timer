@@ -1,6 +1,8 @@
 const scoreTable = document.getElementById("score-table");
 const tenCountElement = document.getElementById("ten-count");
 const xCountElement = document.getElementById("x-count");
+let distanceElems = document.getElementsByClassName("distance");
+
 let scoreIndex = 0;
 const calculateScore = () => {
     let runningTotal = 0;
@@ -159,7 +161,7 @@ function buttonPressed(e) {
 function saveToURL() {
     const score = inputs.map(input => input.textContent.trim()).join('');
     const date = document.getElementsByClassName("date")[scoreIndex].innerText;
-    const distance = document.getElementsByClassName("distance")[scoreIndex].innerText;
+    const distance = distanceElems[scoreIndex].innerText;
     history.replaceState("", "", `?date=${date}&distance=${distance}&score=${score}`);
 }
 
@@ -262,9 +264,9 @@ const initScoreTable = () => {
     document.getElementsByClassName("date-picker")[scoreIndex].value = date;
 
     if (searchParams.has("distance")) {
-        document.getElementsByClassName("distance")[scoreIndex].innerText = searchParams.get("distance");
+        distanceElems[scoreIndex].innerText = searchParams.get("distance");
     } else {
-        document.getElementsByClassName("distance")[scoreIndex].innerText = "70m";
+        distanceElems[scoreIndex].innerText = "70m";
     }
 };
 
@@ -279,7 +281,6 @@ function clearScore() {
         removeThumbnail();
         calculateScore();
         saveToURL();
-
     }
 }
 
@@ -336,9 +337,6 @@ const distanceMenu = document.getElementById('distance-menu');
 
 distance.addEventListener('click', (event) => {
     distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
-
-    const menuWidth = distanceMenu.offsetWidth;
-    const menuHeight = distanceMenu.offsetHeight;
     distanceMenu.style.left = `${event.pageX}px`;
     distanceMenu.style.top = `${event.pageY}px`;
 });
