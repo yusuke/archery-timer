@@ -4,6 +4,24 @@ const xCountElement = document.getElementById("x-count");
 let distanceElems = document.getElementsByClassName("distance");
 
 let scoreIndex = 0;
+
+function isFilled(elems) {
+    return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
+}
+
+function sumThree(elems) {
+    return scoreValue(elems[0]) + scoreValue(elems[1]) + scoreValue(elems[2])
+}
+
+const scoreValue = (input) => {
+    const value = input.textContent.toUpperCase();
+    if (value === "X") return 10;
+    if (value === "M") return 0;
+    const intValue = parseInt(value);
+    if (isNaN(intValue) || intValue < 0 || intValue > 10) return 0;
+    return intValue;
+};
+
 const calculateScore = () => {
     let runningTotal = 0;
     for (let i = 0; i < 6; i++) {
@@ -39,24 +57,6 @@ const calculateScore = () => {
     updateStatistics();
 };
 
-function isFilled(elems) {
-    return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
-}
-
-function sumThree(elems) {
-    return scoreValue(elems[0]) + scoreValue(elems[1]) + scoreValue(elems[2])
-}
-
-const scoreValue = (input) => {
-    const value = input.textContent.toUpperCase();
-    if (value === "X") return 10;
-    if (value === "M") return 0;
-    const intValue = parseInt(value);
-    if (isNaN(intValue) || intValue < 0 || intValue > 10) return 0;
-    return intValue;
-};
-
-
 const updateStatistics = () => {
     let xCount = 0;
     let tenCount = 0;
@@ -75,7 +75,6 @@ const updateStatistics = () => {
     xCountElement.textContent = xCount;
 };
 
-
 const moveFocus = (direction) => {
     const newIndex = focusIndex + direction;
 
@@ -93,12 +92,11 @@ function focus(elem) {
 
 function unfocus(elem) {
     elem.classList.remove("inner-outline");
-
 }
 
 let touchStartX = 0;
 let touchEndX = 0;
-let flickThreshold = 30; // ここでフリックの幅を設定します（ピクセル単位）
+let flickThreshold = 30;
 let flickCounter = 0;
 let flickMinIndex = 0;
 
@@ -133,7 +131,6 @@ function handleTouchMove(event) {
 const onScreenKeyboardBtns = keyboard.querySelectorAll("td");
 
 onScreenKeyboardBtns.forEach(btn => {
-
     if (btn.dataset.value) {
         if ('ontouchstart' in document.documentElement && btn.dataset.value !== "del") {
             btn.addEventListener('touchstart', handleTouchStart, false);
@@ -193,7 +190,6 @@ function getColorClassName(value) {
     return "white-circle";
 }
 
-
 const handleInputClick = (e) => {
     e.preventDefault();
     for (let i = 0; i < inputs.length; i++) {
@@ -207,6 +203,7 @@ const handleInputClick = (e) => {
         }
     }
 };
+
 let inputs;
 let focusIndex = 0;
 const initScoreTable = () => {
@@ -294,11 +291,9 @@ function removeThumbnail() {
             scoreElement.removeChild(child);
         }
     }
-
 }
 
 function downloadScreenshot() {
-
     html2canvas(scoreElement).then(canvas => {
         const img = document.createElement("img");
         img.src = canvas.toDataURL("image/png");
@@ -311,8 +306,6 @@ function downloadScreenshot() {
 
 document.getElementById("save-button").addEventListener("click", downloadScreenshot);
 
-
-// dot menu
 const dotMenu = document.getElementById('dot-menu');
 const popupMenu = document.getElementById('popup-menu');
 
@@ -329,9 +322,7 @@ document.addEventListener('click', (event) => {
     if (event.target !== dotMenu && event.target !== popupMenu) {
         popupMenu.style.display = 'none';
     }
-});
-
-// distance menu
+})
 const distance = document.getElementById('distance');
 const distanceMenu = document.getElementById('distance-menu');
 
@@ -365,7 +356,6 @@ function formatDate(date) {
 
 const dateDisplays = document.getElementsByClassName('date');
 const datePickers = document.getElementsByClassName('date-picker');
-
 
 for (let i = 0; i < dateDisplays.length; i++) {
     const dateDisplay = dateDisplays[i];
