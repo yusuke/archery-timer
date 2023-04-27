@@ -359,18 +359,31 @@ document.addEventListener('click', (event) => {
 })
 const distanceMenu = document.getElementById('distance-menu');
 
+
 let distanceToBeSet;
 
+const plusButton = document.getElementById("plus-button");
+plusButton.addEventListener('click', event => {
+    distanceToBeSet = event.target;
+    distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
+    distanceMenu.style.left = `${event.pageX}px`;
+    distanceMenu.style.top = `${event.pageY}px`;
+});
 document.addEventListener('click', (event) => {
-    if (!event.target.classList.contains("distance") && event.target !== distanceMenu) {
+    if (!event.target.classList.contains("distance") && event.target !== plusButton && event.target !== distanceMenu) {
         distanceMenu.style.display = 'none';
     }
 });
 
+
 Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem => elem.addEventListener('click', (event) => {
-    distanceToBeSet.innerText = elem.innerText;
-    distanceMenu.style.display = 'none';
-    saveToURL();
+    if (distanceToBeSet === plusButton) {
+        // add new scorecard
+    } else {
+        distanceToBeSet.innerText = elem.innerText;
+        distanceMenu.style.display = 'none';
+        saveToURL();
+    }
 }))
 
 function formatDate(date) {
@@ -382,3 +395,4 @@ function formatDate(date) {
     });
     return formatter.format(date);
 }
+
