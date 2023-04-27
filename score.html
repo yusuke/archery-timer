@@ -10,16 +10,15 @@
 <body>
 <div class="contents" id="contents">
     <div id="scores">
-        <div>
-            <!--suppress HtmlFormInputWithoutLabel -->
-            <input type="date" class="date-picker"><span class="date"></span>&nbsp;&nbsp;&nbsp;<span id="distance"
-                                                                                                     class="distance"></span>
-        </div>
         <div class="round">
-            <table id="score-table">
+            <div>
+                <!--suppress HtmlFormInputWithoutLabel -->
+                <input type="date" class="date-picker"><span class="date"></span>&nbsp;&nbsp;&nbsp;<span id="distance"
+                                                                                                         class="distance"></span>
+            </div>
+            <table id="score-table" class="score-table">
             </table>
-            <div>10s: <span id="ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:
-                <span id="x-count">0</span>
+            <div>10s:<span class="ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:<span class="x-count">0</span>
             </div>
         </div>
     </div>

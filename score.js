@@ -1,7 +1,4 @@
-const scoreTable = document.getElementById("score-table");
-const tenCountElement = document.getElementById("ten-count");
-const xCountElement = document.getElementById("x-count");
-let distanceElems = document.getElementsByClassName("distance");
+let focusIndex = 0;
 
 let scoreIndex = 0;
 
@@ -22,46 +19,51 @@ const scoreValue = (input) => {
     return intValue;
 };
 
-const calculateScore = () => {
-    let runningTotal = 0;
+
+function calculateScore() {
+    calculateScoreFor(rounds[0]);
+}
+function calculateScoreFor(round) {
+
+        let runningTotal = 0;
     for (let i = 0; i < 6; i++) {
         const endIndex = i * 2;
         const startIndex = i * 6;
 
-        let firstThree = inputs.slice(startIndex, startIndex + 3);
+        let firstThree = round.inputs.slice(startIndex, startIndex + 3);
         const sum1 = sumThree(firstThree);
-        let laterThree = inputs.slice(startIndex + 3, startIndex + 6);
+        let laterThree = round.inputs.slice(startIndex + 3, startIndex + 6);
         const sum2 = sumThree(laterThree);
         const sum1Filled = isFilled(firstThree)
         const sum2Filled = isFilled(laterThree)
         const total = sum1 + sum2;
 
-        scoreTable.rows[endIndex].cells[4].textContent = sum1Filled ? sum1 : ""; // 1-3 sum
-        scoreTable.rows[endIndex + 1].cells[3].textContent = sum2Filled ? sum2 : ""; // 4-6 sum
+        round.scoreTable.rows[endIndex].cells[4].textContent = sum1Filled ? sum1 : ""; // 1-3 sum
+        round.scoreTable.rows[endIndex + 1].cells[3].textContent = sum2Filled ? sum2 : ""; // 4-6 sum
         runningTotal += total;
-        scoreTable.rows[endIndex].cells[5].textContent = sum1Filled || sum2Filled ? total : ""; // 6本計
+        round.scoreTable.rows[endIndex].cells[5].textContent = sum1Filled || sum2Filled ? total : ""; // 6本計
         const endOver50 = total >= 50;
         if (endOver50) {
-            scoreTable.rows[endIndex].cells[5].classList.add("over50");
+            round.scoreTable.rows[endIndex].cells[5].classList.add("over50");
         } else {
-            scoreTable.rows[endIndex].cells[5].classList.remove("over50");
+            round.scoreTable.rows[endIndex].cells[5].classList.remove("over50");
         }
-        scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? runningTotal : "";
+        round.scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? runningTotal : "";
         const totalOver50 = runningTotal >= 50 * (i + 1);
         if (totalOver50) {
-            scoreTable.rows[endIndex].cells[6].classList.add("over50");
+            round.scoreTable.rows[endIndex].cells[6].classList.add("over50");
         } else {
-            scoreTable.rows[endIndex].cells[6].classList.remove("over50");
+            round.scoreTable.rows[endIndex].cells[6].classList.remove("over50");
         }
     }
-    updateStatistics();
-};
+    updateStatistics(round);
+}
 
-const updateStatistics = () => {
+const updateStatistics = (round) => {
     let xCount = 0;
     let tenCount = 0;
 
-    inputs.forEach((input) => {
+    round.inputs.forEach((input) => {
         const value = input.innerText;
         if (value === "X") {
             xCount++;
@@ -71,16 +73,16 @@ const updateStatistics = () => {
             tenCount++;
         }
     });
-    tenCountElement.textContent = tenCount;
-    xCountElement.textContent = xCount;
+    round.tenCountElement.textContent = tenCount;
+    round.xCountElement.textContent = xCount;
 };
 
 const moveFocus = (direction) => {
     const newIndex = focusIndex + direction;
 
-    if (newIndex >= 0 && newIndex < inputs.length) {
-        focus(inputs[newIndex]);
-        unfocus(inputs[focusIndex]);
+    if (newIndex >= 0 && newIndex < rounds[0].inputs.length) {
+        focus(rounds[0].inputs[newIndex]);
+        unfocus(rounds[0].inputs[focusIndex]);
         focusIndex = newIndex;
     }
 };
@@ -123,7 +125,7 @@ function handleTouchMove(event) {
     }
     if (-1 <= numberOfFlicks && numberOfFlicks < flickCounter && flickMinIndex < focusIndex) {
         backSpace();
-        calculateScore();
+        calculateScore(rounds[0]);
         flickCounter = numberOfFlicks;
     }
 }
@@ -148,7 +150,7 @@ function buttonPressed(e) {
     if (value === "del") {
         backSpace();
     } else {
-        setCellValue(inputs[focusIndex], value);
+        setCellValue(rounds[0].inputs[focusIndex], value);
         moveFocus(1);
     }
     saveToURL();
@@ -156,9 +158,9 @@ function buttonPressed(e) {
 }
 
 function saveToURL() {
-    const score = inputs.map(input => input.textContent.trim()).join('');
-    const date = document.getElementsByClassName("date")[scoreIndex].innerText;
-    const distance = distanceElems[scoreIndex].innerText;
+    const score = rounds[0].inputs.map(input => input.textContent.trim()).join('');
+    const date = rounds[0].date.innerText;
+    const distance = rounds[0].distance.innerText;
     history.replaceState("", "", `?date=${date}&distance=${distance}&score=${score}`);
 }
 
@@ -204,12 +206,11 @@ const handleInputClick = (e) => {
     }
 };
 
-let inputs;
-let focusIndex = 0;
-const initScoreTable = () => {
 
+function Round(round){
+    this.scoreTable = round.getElementsByClassName("score-table").item(0);
     for (let i = 1; i <= 6; i++) {
-        scoreTable.insertRow().innerHTML = `
+        this.scoreTable.insertRow().innerHTML = `
                 <td rowspan="2">${i}</td>
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
@@ -218,7 +219,7 @@ const initScoreTable = () => {
                 <td rowspan="2"></td>
                 <td rowspan="2"></td>
             `;
-        scoreTable.insertRow().innerHTML = `
+        this.scoreTable.insertRow().innerHTML = `
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
                 <td class="shot">&nbsp;</td>
@@ -227,11 +228,28 @@ const initScoreTable = () => {
     }
 
     // Add event listeners to input elements
-    inputs = Array.from(scoreTable.querySelectorAll(".shot"));
-    inputs.forEach(input => {
+    this.inputs = Array.from(round.getElementsByClassName("shot"));
+    this.inputs.forEach(input => {
         input.addEventListener("click", handleInputClick);
     });
 
+
+    this.tenCountElement = round.getElementsByClassName("ten-count").item(0);
+    this.xCountElement = round.getElementsByClassName("x-count").item(0);
+    this.date = round.getElementsByClassName("date").item(0);
+    this.datePicker=round.getElementsByClassName("date-picker")[0];
+    this.distance = round.getElementsByClassName('distance')[0];
+    this.distance.addEventListener('click', (event) => {
+        distanceToBeSet = event.target;
+        distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
+        distanceMenu.style.left = `${event.pageX}px`;
+        distanceMenu.style.top = `${event.pageY}px`;
+    });
+
+}
+let rounds = [new Round(document.getElementsByClassName("round").item(0))];
+
+function restore(){
     const searchParams = new URLSearchParams(window.location.search);
     // restore state from URL
     let index = 0;
@@ -239,17 +257,16 @@ const initScoreTable = () => {
         const scoreString = searchParams.get("score");
         scoreString.split('').forEach(fillScore => {
             if (fillScore !== "0") {
-                setCellValue(inputs[index], fillScore);
+                setCellValue(rounds[0].inputs[index], fillScore);
                 index++;
             } else {
-                setCellValue(inputs[index - 1], "10");
+                setCellValue(rounds[0].inputs[index - 1], "10");
             }
         });
-        calculateScore();
-        focusIndex = ((index) === inputs.length) ? index - 1 : index;
-        focus(inputs[focusIndex]);
+        focusIndex = ((index) === rounds[0].inputs.length) ? index - 1 : index;
+        focus(rounds[0].inputs[focusIndex]);
     } else {
-        focus(inputs[0]);
+        focus(rounds[0].inputs[0]);
     }
     let date;
     if (searchParams.has("date")) {
@@ -257,24 +274,25 @@ const initScoreTable = () => {
     } else {
         date = formatDate(new Date());
     }
-    document.getElementsByClassName("date")[scoreIndex].innerText = date;
-    document.getElementsByClassName("date-picker")[scoreIndex].value = date;
+    rounds[0].date.innerText = date;
+    rounds[0].datePicker.value = date;
 
     if (searchParams.has("distance")) {
-        distanceElems[scoreIndex].innerText = searchParams.get("distance");
+        rounds[0].distance.innerText = searchParams.get("distance");
     } else {
-        distanceElems[scoreIndex].innerText = "70m";
+        rounds[0].distance.innerText = "70m";
     }
-};
+    calculateScore(rounds[0]);
 
-initScoreTable();
+}
+restore();
 
 function clearScore() {
     if (confirm("スコアを消去して良いですか?")) {
-        inputs.forEach(input => setCellValue(input, "&nbsp;"));
-        unfocus(inputs[focusIndex]);
+        rounds[0].inputs.forEach(input => setCellValue(input, "&nbsp;"));
+        unfocus(rounds[0].inputs[focusIndex]);
         focusIndex = 0;
-        focus(inputs[focusIndex]);
+        focus(rounds[0].inputs[focusIndex]);
         removeThumbnail();
         calculateScore();
         saveToURL();
@@ -323,23 +341,18 @@ document.addEventListener('click', (event) => {
         popupMenu.style.display = 'none';
     }
 })
-const distance = document.getElementById('distance');
 const distanceMenu = document.getElementById('distance-menu');
 
-distance.addEventListener('click', (event) => {
-    distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
-    distanceMenu.style.left = `${event.pageX}px`;
-    distanceMenu.style.top = `${event.pageY}px`;
-});
+let distanceToBeSet;
 
 document.addEventListener('click', (event) => {
-    if (event.target !== distance && event.target !== distanceMenu) {
+    if (!event.target.classList.contains("distance") && event.target !== distanceMenu) {
         distanceMenu.style.display = 'none';
     }
 });
 
 Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem => elem.addEventListener('click', (event) => {
-    distance.innerText = elem.innerText;
+    distanceToBeSet.innerText = elem.innerText;
     distanceMenu.style.display = 'none';
     saveToURL();
 }))
