@@ -23,9 +23,10 @@ const scoreValue = (input) => {
 function calculateScore() {
     calculateScoreFor(rounds[0]);
 }
+
 function calculateScoreFor(round) {
 
-        let runningTotal = 0;
+    let runningTotal = 0;
     for (let i = 0; i < 6; i++) {
         const endIndex = i * 2;
         const startIndex = i * 6;
@@ -207,7 +208,7 @@ const handleInputClick = (e) => {
 };
 
 
-function Round(round){
+function Round(round) {
     this.scoreTable = round.getElementsByClassName("score-table").item(0);
     for (let i = 1; i <= 6; i++) {
         this.scoreTable.insertRow().innerHTML = `
@@ -237,7 +238,7 @@ function Round(round){
     this.tenCountElement = round.getElementsByClassName("ten-count").item(0);
     this.xCountElement = round.getElementsByClassName("x-count").item(0);
     this.date = round.getElementsByClassName("date").item(0);
-    this.datePicker=round.getElementsByClassName("date-picker")[0];
+    this.datePicker = round.getElementsByClassName("date-picker")[0];
     this.dateDisplay = document.getElementsByClassName('date')[0];
     this.dateDisplay.addEventListener('click', () => {
         this.datePicker.focus();
@@ -260,12 +261,11 @@ function Round(round){
     });
 
 
-
-
 }
+
 let rounds = [new Round(document.getElementsByClassName("round").item(0))];
 
-function restore(){
+function restore() {
     const searchParams = new URLSearchParams(window.location.search);
     // restore state from URL
     let index = 0;
@@ -301,6 +301,7 @@ function restore(){
     calculateScore(rounds[0]);
 
 }
+
 restore();
 
 function clearScore() {
