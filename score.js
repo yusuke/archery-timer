@@ -158,9 +158,9 @@ function buttonPressed(e) {
 }
 
 function saveToURL() {
-    const score = rounds[0].inputs.map(input => input.textContent.trim()).join('');
-    const date = rounds[0].date.innerText;
-    const distance = rounds[0].distance.innerText;
+    const score = rounds.map(e => e.inputs.map(input => input.textContent.trim()).join('')).join(',');
+    const date = rounds.map(e => e.date.innerText).join(',');
+    const distance = rounds.map(e => e.distance.innerText).join(',');
     history.replaceState("", "", `?date=${date}&distance=${distance}&score=${score}`);
 }
 
@@ -238,6 +238,19 @@ function Round(round){
     this.xCountElement = round.getElementsByClassName("x-count").item(0);
     this.date = round.getElementsByClassName("date").item(0);
     this.datePicker=round.getElementsByClassName("date-picker")[0];
+    this.dateDisplay = document.getElementsByClassName('date')[0];
+    this.dateDisplay.addEventListener('click', () => {
+        this.datePicker.focus();
+        this.datePicker.click();
+    });
+
+    this.datePicker.addEventListener('change', () => {
+        const selectedDate = new Date(this.datePicker.value);
+        this.dateDisplay.textContent = formatDate(selectedDate);
+        saveToURL();
+        this.datePicker.click();
+    });
+
     this.distance = round.getElementsByClassName('distance')[0];
     this.distance.addEventListener('click', (event) => {
         distanceToBeSet = event.target;
@@ -245,6 +258,9 @@ function Round(round){
         distanceMenu.style.left = `${event.pageX}px`;
         distanceMenu.style.top = `${event.pageY}px`;
     });
+
+
+
 
 }
 let rounds = [new Round(document.getElementsByClassName("round").item(0))];
@@ -365,23 +381,4 @@ function formatDate(date) {
         year: 'numeric', month: 'numeric', day: 'numeric',
     });
     return formatter.format(date);
-}
-
-const dateDisplays = document.getElementsByClassName('date');
-const datePickers = document.getElementsByClassName('date-picker');
-
-for (let i = 0; i < dateDisplays.length; i++) {
-    const dateDisplay = dateDisplays[i];
-    const datePicker = datePickers[i];
-    dateDisplay.addEventListener('click', () => {
-        datePicker.focus();
-        datePicker.click();
-
-    });
-    datePicker.addEventListener('change', () => {
-        const selectedDate = new Date(datePicker.value);
-        dateDisplay.textContent = formatDate(selectedDate);
-        saveToURL();
-        datePicker.click();
-    });
 }
