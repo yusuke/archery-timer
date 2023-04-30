@@ -404,7 +404,6 @@ function Round(distance, date, scoreString, eventName, place, weather, wind, sig
     this.distance = round.getElementsByClassName('distance')[0];
 
     checkIndoor(this);
-    focus(focusIndex);
 
     this.distance.innerHTML = distance;
     this.distance.addEventListener('click', (event) => {
@@ -415,6 +414,7 @@ function Round(distance, date, scoreString, eventName, place, weather, wind, sig
     });
     calculateScoreFor(this);
     setPlusButtonVisibility();
+    focus(focusIndex);
 }
 function checkIndoor(round) {
     round.isIndoorRound = round.distance.innerText === "18m"
@@ -544,7 +544,7 @@ Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem
     if (distanceToBeSet === plusButton) {
         const date = formatDate(new Date());
         new Round(elem.innerText, date);
-        setPlusButtonVisibility();
+        event.preventDefault();
     } else {
         distanceToBeSet.innerText = elem.innerText;
         const element = distanceToBeSet.parentNode.parentNode.querySelector('.score-table');
