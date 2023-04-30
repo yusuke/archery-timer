@@ -346,8 +346,7 @@ function restore() {
         }
 
     } else {
-        const date = formatDate(new Date());
-        const round = new Round("70m", date);
+        new Round("70m", formatDate(new Date()));
     }
     focus(focusIndex);
 }
@@ -356,12 +355,11 @@ restore();
 
 function clearScore() {
     if (confirm("スコアを消去して良いですか?")) {
-        rounds[0].inputs.forEach(input => setCellValue(input, "&nbsp;"));
-        unfocus(focusIndex);
-        focusIndex = 0;
-        focus(focusIndex);
         removeThumbnail();
-        calculateScore();
+        rounds = [];
+        const scores = document.getElementById("scores");
+        scores.innerHTML = '';
+        new Round("70m", formatDate(new Date()));
         saveToURL();
     }
 }
