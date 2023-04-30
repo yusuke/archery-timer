@@ -97,7 +97,7 @@ const moveFocus = (direction) => {
 };
 
 function focus(index) {
-    if (index < currentRound.inputs.length) {
+    if (index <= currentRound.maxInputIndex) {
         const elem = currentRound.inputs[index];
         elem.classList.add("inner-outline");
         elem.scrollIntoView({behavior: "smooth", block: "start"});
@@ -159,7 +159,8 @@ onScreenKeyboardBtns.forEach(btn => {
 });
 
 function setPlusButtonVisibility() {
-    if (currentInputs[currentInputs.length - 1].innerText.trim() !== "") {
+    checkIndoor(currentRound);
+    if (currentInputs[currentRound.maxInputIndex].innerText.trim() !== "") {
         plusButton.style.display = "block";
     } else {
         plusButton.style.display = "none";
@@ -173,7 +174,8 @@ function buttonPressed(e) {
     if (value === "del") {
         backSpace();
     } else {
-        if (focusIndex !== currentInputs.length) {
+        checkIndoor(currentRound);
+        if (focusIndex <= currentRound.maxInputIndex) {
             setCellValue(currentInputs[focusIndex], value);
             moveFocus(1);
         }
@@ -312,6 +314,9 @@ function Round(distance, date, scoreString) {
     });
 
     this.distance = round.getElementsByClassName('distance')[0];
+
+    checkIndoor(this);
+
     this.distance.innerHTML = distance;
     this.distance.addEventListener('click', (event) => {
         distanceToBeSet = event.target;
@@ -321,6 +326,12 @@ function Round(distance, date, scoreString) {
     });
     calculateScoreFor(this);
 }
+function checkIndoor(round) {
+    round.isIndoorRound = round.distance.innerText === "18m"
+    round.maxInputIndex = round.isIndoorRound ? 29 : 35;
+}
+
+
 function setVisibility(table, distance){
     const display = distance === "18m" ? "none" : "";
     table.rows[10].style.display = display;
