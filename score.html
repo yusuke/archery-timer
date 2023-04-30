@@ -11,9 +11,15 @@
 <div class="contents" id="contents">
     <div id="scores">
 
+
     </div>
+    <div style="text-align: center;margin: 0 auto;display: flex;justify-content: center">
+        <button id="plus-button" class="plusButton" style="margin: 10px; display: none">+</button>
+        <button id="edit-button" class="plusButton" style="margin: 10px;">✏️</button>
+    </div>
+
+
     <div style="text-align: center">
-        <button id="plus-button" class="plusButton" style="margin: 0 auto; display: none">+</button>
     </div>
     <div id="round-template" class="round" style="display: none">
         <div>
@@ -23,11 +29,34 @@
         <table class="score-table">
         </table>
         <div style="text-align: right">Total:<span class="total">0</span>&nbsp;&nbsp;&nbsp;&nbsp;10s:<span class="ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:<span class="x-count">0</span>
+            <div>
+                <div style="display:none">Event Name: <span class="event-name-content"></span></div>
+                <div style="display:none">Place: <span class="place-content"></span></div>
+                <div style="display:none">Weather: <span class="weather-content"></span></div>
+                <div style="display:none">Wind: <span class="wind-content"></span></div>
+                <div style="display:none">Sight: <span class="sight-content"></span></div>
+                <div style="display:none">Brace Height: <span class="brace-height-content"></span></div>
+                <div style="display:none"><pre class="note-content"></pre></div>
+            </div>
         </div>
         <div style="text-align: right;display:none" class="running" >Running Total:<span class="running-total">0</span>&nbsp;&nbsp;&nbsp;&nbsp;10s:<span class="running-ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:<span class="running-x-count">0</span>
         </div>
     </div>
 
+    <div id="edit-form" class="form-container">
+        <div class="form-row"><label for="event-name">Event Name</label><input id="event-name" maxlength="20" type="text"></div>
+        <div class="form-row"><label for="place">Place</label><input id="place" maxlength="20" type="text"></div>
+        <div class="form-row"><label for="weather">Weather</label><input id="weather" maxlength="10" type="text"></div>
+        <div class="form-row"><label for="wind">Wind</label><input id="wind" maxlength="10" type="text"></div>
+        <div class="form-row"><label for="sight">Sight</label><input id="sight" maxlength="10" type="text"></div>
+        <div class="form-row"><label for="brace-height">Brace Height</label><input id="brace-height" maxlength="10"
+                                                                                   type="text"></div>
+        <div class="form-row"><label for="note">Note</label></div>
+        <div class="form-row"><textarea id="note"></textarea></div>
+        <div class="form-row">
+            <button id="edit-ok">OK</button>
+        </div>
+    </div>
     <div id="popup-menu" class="popup-menu">
         <a href="#" id="save-button">スコアを保存用に画像化</a>
         <hr>

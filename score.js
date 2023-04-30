@@ -188,12 +188,26 @@ function buttonPressed(e) {
 }
 
 function saveToLocalStorage() {
-    const scores = rounds.map(e => e.inputs.map(input => input.textContent.trim()).join('')).join(',');
-    const dates = rounds.map(e => e.dateDisplay.innerText).join(',');
-    const distances = rounds.map(e => e.distance.innerText).join(',');
+    const scores = JSON.stringify(rounds.map(e => e.inputs.map(input => input.textContent.trim()).join('')));
     localStorage.setItem("scores", scores);
-    localStorage.setItem("dates",dates);
-    localStorage.setItem("distances",distances);
+    const dates = JSON.stringify(rounds.map(e => e.dateDisplay.innerText));
+    localStorage.setItem("dates", dates);
+    const distances = JSON.stringify(rounds.map(e => e.distance.innerText));
+    localStorage.setItem("distances", distances);
+    const eventNames = JSON.stringify(rounds.map(e => e.eventNameContent.innerText));
+    localStorage.setItem("eventNames", eventNames);
+    const places = JSON.stringify(rounds.map(e => e.placeContent.innerText));
+    localStorage.setItem("places", places);
+    const weathers = JSON.stringify(rounds.map(e => e.weatherContent.innerText));
+    localStorage.setItem("weathers", weathers);
+    const winds = JSON.stringify(rounds.map(e => e.windContent.innerText));
+    localStorage.setItem("winds", winds);
+    const sights = JSON.stringify(rounds.map(e => e.sightContent.innerText));
+    localStorage.setItem("sights", sights);
+    const braceHeights = JSON.stringify(rounds.map(e => e.braceHeightContent.innerText));
+    localStorage.setItem("braceHeights", braceHeights);
+    const notes = JSON.stringify(rounds.map(e => e.noteContent.innerText));
+    localStorage.setItem("notes", notes);
 }
 
 function setCellValue(inputElem, value) {
@@ -238,10 +252,53 @@ document.addEventListener('click', (event) => {
         distanceMenu.style.display = 'none';
     }
 });
+const editButton = document.getElementById("edit-button");
+const editForm = document.getElementById('edit-form');
+
+editButton.addEventListener('click', event => {
+    document.getElementById("event-name").value = currentRound.eventNameContent.innerText;
+    document.getElementById("place").value = currentRound.placeContent.innerText;
+    document.getElementById("weather").value = currentRound.weatherContent.innerText;
+    document.getElementById("wind").value = currentRound.windContent.innerText;
+    document.getElementById("sight").value = currentRound.sightContent.innerText;
+    document.getElementById("brace-height").value = currentRound.braceHeightContent.innerText;
+    document.getElementById("note").value = currentRound.noteContent.innerText;
+    editForm.style.display = (editForm.style.display === 'block') ? 'none' : 'block';
+    document.getElementById("event-name").scrollIntoView({behavior: "smooth", block: "start"});
+});
+
+const editOK = document.getElementById("edit-ok");
+
+editOK.addEventListener('click', event => {
+    const eventName = document.getElementById("event-name").value;
+    setContentAndVisibility(currentRound.eventNameContent,  eventName);
+    const place = document.getElementById("place").value;
+    setContentAndVisibility(currentRound.placeContent,  place);
+    const weather = document.getElementById("weather").value;
+    setContentAndVisibility(currentRound.weatherContent,  weather);
+    const wind = document.getElementById("wind").value;
+    setContentAndVisibility(currentRound.windContent,  wind);
+    const sight = document.getElementById("sight").value;
+    setContentAndVisibility(currentRound.sightContent,  sight);
+    const braceHeight = document.getElementById("brace-height").value;
+    setContentAndVisibility(currentRound.braceHeightContent,  braceHeight);
+    const note = document.getElementById("note").value;
+    setContentAndVisibility(currentRound.noteContent,  note);
+    editForm.style.display = 'none';
+    saveToLocalStorage();
+});
 
 const roundTemplate = document.getElementById("round-template");
 
-function Round(distance, date, scoreString) {
+function setContentAndVisibility(elem, value) {
+    if (value) {
+        elem.innerText = value;
+        console.log(elem.classList + ":" + value);
+        elem.parentNode.style.display = value.trim() !== '' ? "block" : "none";
+    }
+}
+
+function Round(distance, date, scoreString, eventName, place, weather, wind, sight, braceHeight, note) {
     rounds[rounds.length] = this;
     if (currentInputs) {
         unfocus(focusIndex);
@@ -303,6 +360,22 @@ function Round(distance, date, scoreString) {
         });
     });
 
+    this.eventNameContent = round.getElementsByClassName("event-name-content")[0];
+    setContentAndVisibility(this.eventNameContent , eventName);
+    this.placeContent = round.getElementsByClassName("place-content")[0];
+    setContentAndVisibility(this.placeContent , place);
+    this.weatherContent = round.getElementsByClassName("weather-content")[0];
+    setContentAndVisibility(this.weatherContent , weather);
+    this.windContent = round.getElementsByClassName("wind-content")[0];
+    setContentAndVisibility(this.windContent , wind);
+    this.sightContent = round.getElementsByClassName("sight-content")[0];
+    setContentAndVisibility(this.sightContent , sight);
+    this.braceHeightContent = round.getElementsByClassName("brace-height-content")[0];
+    setContentAndVisibility(this.braceHeightContent , braceHeight);
+    this.noteContent = round.getElementsByClassName("note-content")[0];
+    setContentAndVisibility(this.noteContent , note);
+
+
     this.totalElement = round.getElementsByClassName("total")[0];
     this.tenCountElement = round.getElementsByClassName("ten-count")[0];
     this.xCountElement = round.getElementsByClassName("x-count")[0];
@@ -358,20 +431,32 @@ function setVisibility(table, distance){
 let rounds = [];
 
 function restore() {
+    function getLocalStorageFallback(key) {
+        const value = localStorage.getItem(key);
+        try {
+            return value ? JSON.parse(value) : [];
+        }catch(e){
+            return [];
+        }
+    }
+
     // restore state from local storage
-    let scores = localStorage.getItem("scores");
-    const scoreStrings = scores ? scores.split(",") : [];
-    let storedDates = localStorage.getItem("dates");
-    const dates = storedDates ? storedDates.split(",") : [];
-    let storedDistances = localStorage.getItem("distances");
-    const distances = storedDistances ? storedDistances.split(",") : [];
+    const scoreStrings = getLocalStorageFallback("scores");
+    const dates = getLocalStorageFallback("dates");
+    const distances = getLocalStorageFallback("distances");
+    const eventNames = getLocalStorageFallback("eventNames");
+    const places = getLocalStorageFallback("places");
+    const weathers = getLocalStorageFallback("weathers");
+    const winds = getLocalStorageFallback("winds");
+    const sights = getLocalStorageFallback("sights");
+    const braceHeights = getLocalStorageFallback("braceHeights");
+    const notes = getLocalStorageFallback("notes");
+
     if (scoreStrings.length > 0) {
-        const loop = Math.min(scoreStrings.length, dates.length, distances.length);
+        const loop = Math.min(scoreStrings.length, dates.length, distances.length
+            , eventNames.length, places.length, weathers.length, winds.length, sights.length, braceHeights.length, notes.length);
         for (let i = 0; i < loop; i++) {
-            const scoreString = scoreStrings[i];
-            const date = dates[i];
-            const distance = distances[i];
-            new Round(distance, date, scoreString);
+            new Round(distances[i], dates[i], scoreStrings[i], eventNames[i], places[i], weathers[i], winds[i], sights[i], braceHeights[i], notes[i]);
         }
 
     } else {
@@ -388,6 +473,17 @@ function clearScore() {
         localStorage.removeItem("scores");
         localStorage.removeItem("dates");
         localStorage.removeItem("distances");
+        localStorage.removeItem("scores");
+        localStorage.removeItem("dates");
+        localStorage.removeItem("distances");
+        localStorage.removeItem("eventNames");
+        localStorage.removeItem("places");
+        localStorage.removeItem("weathers");
+        localStorage.removeItem("winds");
+        localStorage.removeItem("sights");
+        localStorage.removeItem("braceHeights");
+        localStorage.removeItem("notes");
+
         rounds = [];
         const scores = document.getElementById("scores");
         scores.innerHTML = '';
