@@ -162,6 +162,7 @@ function setPlusButtonVisibility() {
     checkIndoor(currentRound);
     if (currentInputs[currentRound.maxInputIndex].innerText.trim() !== "") {
         plusButton.style.display = "block";
+        plusButton.scrollIntoView({behavior: "smooth", block: "start"});
     } else {
         plusButton.style.display = "none";
     }
@@ -225,6 +226,19 @@ function getColorClassName(value) {
     return "white-circle";
 }
 
+const plusButton = document.getElementById("plus-button");
+plusButton.addEventListener('click', event => {
+    distanceToBeSet = event.target;
+    distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
+    distanceMenu.style.left = `${event.pageX}px`;
+    distanceMenu.style.top = `${event.pageY}px`;
+});
+document.addEventListener('click', (event) => {
+    if (!event.target.classList.contains("distance") && event.target !== plusButton && event.target !== distanceMenu) {
+        distanceMenu.style.display = 'none';
+    }
+});
+
 const roundTemplate = document.getElementById("round-template");
 
 function Round(distance, date, scoreString) {
@@ -271,7 +285,6 @@ function Round(distance, date, scoreString) {
         });
     }
     focusIndex = index;
-    focus(focusIndex);
 
 
     this.inputs.forEach(input => {
@@ -318,6 +331,7 @@ function Round(distance, date, scoreString) {
     this.distance = round.getElementsByClassName('distance')[0];
 
     checkIndoor(this);
+    focus(focusIndex);
 
     this.distance.innerHTML = distance;
     this.distance.addEventListener('click', (event) => {
@@ -327,6 +341,7 @@ function Round(distance, date, scoreString) {
         distanceMenu.style.top = `${event.pageY}px`;
     });
     calculateScoreFor(this);
+    setPlusButtonVisibility();
 }
 function checkIndoor(round) {
     round.isIndoorRound = round.distance.innerText === "18m"
@@ -427,19 +442,6 @@ const distanceMenu = document.getElementById('distance-menu');
 
 
 let distanceToBeSet;
-
-const plusButton = document.getElementById("plus-button");
-plusButton.addEventListener('click', event => {
-    distanceToBeSet = event.target;
-    distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
-    distanceMenu.style.left = `${event.pageX}px`;
-    distanceMenu.style.top = `${event.pageY}px`;
-});
-document.addEventListener('click', (event) => {
-    if (!event.target.classList.contains("distance") && event.target !== plusButton && event.target !== distanceMenu) {
-        distanceMenu.style.display = 'none';
-    }
-});
 
 
 Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem => elem.addEventListener('click', (event) => {
