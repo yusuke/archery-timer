@@ -1,7 +1,7 @@
 let focusIndex = 0;
-
-let scoreIndex = 0;
-
+let focusRound = 0;
+let currentRound;
+let currentInputs;
 function isFilled(elems) {
     return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
 }
@@ -21,12 +21,12 @@ const scoreValue = (input) => {
 
 
 function calculateScore() {
-    calculateScoreFor(rounds[0]);
+    calculateScoreFor(currentRound);
 }
 
 function calculateScoreFor(round) {
 
-    let runningTotal = 0;
+    let roundTotal = 0;
     for (let i = 0; i < 6; i++) {
         const endIndex = i * 2;
         const startIndex = i * 6;
@@ -37,30 +37,30 @@ function calculateScoreFor(round) {
         const sum2 = sumThree(laterThree);
         const sum1Filled = isFilled(firstThree)
         const sum2Filled = isFilled(laterThree)
-        const total = sum1 + sum2;
+        const endTotal = sum1 + sum2;
 
         round.scoreTable.rows[endIndex].cells[4].textContent = sum1Filled ? sum1 : ""; // 1-3 sum
         round.scoreTable.rows[endIndex + 1].cells[3].textContent = sum2Filled ? sum2 : ""; // 4-6 sum
-        runningTotal += total;
-        round.scoreTable.rows[endIndex].cells[5].textContent = sum1Filled || sum2Filled ? total : ""; // 6本計
-        const endOver50 = total >= 50;
+        roundTotal += endTotal;
+        round.scoreTable.rows[endIndex].cells[5].textContent = sum1Filled || sum2Filled ? endTotal : ""; // 6本計
+        const endOver50 = endTotal >= 50;
         if (endOver50) {
             round.scoreTable.rows[endIndex].cells[5].classList.add("over50");
         } else {
             round.scoreTable.rows[endIndex].cells[5].classList.remove("over50");
         }
-        round.scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? runningTotal : "";
-        const totalOver50 = runningTotal >= 50 * (i + 1);
+        round.scoreTable.rows[endIndex].cells[6].textContent = i !== 0 && (sum1Filled || sum2Filled) ? roundTotal : "";
+        const totalOver50 = roundTotal >= 50 * (i + 1);
         if (totalOver50) {
             round.scoreTable.rows[endIndex].cells[6].classList.add("over50");
         } else {
             round.scoreTable.rows[endIndex].cells[6].classList.remove("over50");
         }
     }
-    updateStatistics(round);
-}
+    round.roundTotal = roundTotal;
+    round.totalElement.innerText = roundTotal;
 
-const updateStatistics = (round) => {
+
     let xCount = 0;
     let tenCount = 0;
 
@@ -74,27 +74,41 @@ const updateStatistics = (round) => {
             tenCount++;
         }
     });
+    round.tenCount = tenCount;
+    round.xCount = xCount;
     round.tenCountElement.textContent = tenCount;
     round.xCountElement.textContent = xCount;
-};
 
-const moveFocus = (direction) => {
-    const newIndex = focusIndex + direction;
+    round.runningTotalElement.textContent = rounds.reduce((accumulator, currentRound) => accumulator + currentRound.roundTotal, 0);
+    round.runningTenCountElement.textContent = rounds.reduce((accumulator, currentRound) => accumulator + currentRound.tenCount, 0);
+    round.runningXCountElement.textContent = rounds.reduce((accumulator, currentRound) => accumulator + currentRound.xCount, 0);
 
-    if (newIndex >= 0 && newIndex < rounds[0].inputs.length) {
-        focus(rounds[0].inputs[newIndex]);
-        unfocus(rounds[0].inputs[focusIndex]);
-        focusIndex = newIndex;
-    }
-};
-
-function focus(elem) {
-    elem.classList.add("inner-outline");
-    elem.scrollIntoView({behavior: "smooth", block: "start"});
 }
 
-function unfocus(elem) {
-    elem.classList.remove("inner-outline");
+
+const moveFocus = (direction) => {
+    const newIndex = Math.max(0,focusIndex + direction);
+    if (newIndex === focusIndex) {
+        return;
+    }
+    unfocus(focusIndex);
+    focus(newIndex);
+    focusIndex = newIndex;
+};
+
+function focus(index) {
+    if (index < currentRound.inputs.length) {
+        const elem = currentRound.inputs[index];
+        elem.classList.add("inner-outline");
+        elem.scrollIntoView({behavior: "smooth", block: "start"});
+    }
+}
+
+function unfocus(index) {
+    if (index < currentRound.inputs.length) {
+        const elem = currentRound.inputs[index];
+        elem.classList.remove("inner-outline");
+    }
 }
 
 let touchStartX = 0;
@@ -126,7 +140,7 @@ function handleTouchMove(event) {
     }
     if (-1 <= numberOfFlicks && numberOfFlicks < flickCounter && flickMinIndex < focusIndex) {
         backSpace();
-        calculateScore(rounds[0]);
+        calculateScore(currentRound);
         flickCounter = numberOfFlicks;
     }
 }
@@ -144,6 +158,14 @@ onScreenKeyboardBtns.forEach(btn => {
     }
 });
 
+function setPlusButtonVisibility() {
+    if (currentInputs[currentInputs.length - 1].innerText.trim() !== "") {
+        plusButton.style.display = "block";
+    } else {
+        plusButton.style.display = "none";
+    }
+}
+
 function buttonPressed(e) {
     e.preventDefault();
     const value = e.target.dataset.value;
@@ -151,17 +173,21 @@ function buttonPressed(e) {
     if (value === "del") {
         backSpace();
     } else {
-        setCellValue(rounds[0].inputs[focusIndex], value);
-        moveFocus(1);
+        if (focusIndex !== currentInputs.length) {
+            setCellValue(currentInputs[focusIndex], value);
+            moveFocus(1);
+        }
     }
+    setPlusButtonVisibility();
+
     saveToURL();
     setTimeout(calculateScore, 50);
 }
 
 function saveToURL() {
-    const score = rounds.map(e => e.inputs.map(input => input.textContent.trim()).join('')).join(',');
-    const date = rounds.map(e => e.date.innerText).join(',');
-    const distance = rounds.map(e => e.distance.innerText).join(',');
+    const score = rounds.map(e => e.inputs.map(input => input.textContent.trim()).join('')).join('&score=');
+    const date = rounds.map(e => e.dateDisplay.innerText).join('&date=');
+    const distance = rounds.map(e => e.distance.innerText).join('&distance=');
     history.replaceState("", "", `?date=${date}&distance=${distance}&score=${score}`);
 }
 
@@ -172,9 +198,11 @@ function setCellValue(inputElem, value) {
 }
 
 function backSpace() {
-    setCellValue(inputs[focusIndex], "&nbsp;");
+    if (focusIndex < currentRound.inputs.length) {
+        setCellValue(currentRound.inputs[focusIndex], "&nbsp;");
+    }
     moveFocus(-1);
-    setCellValue(inputs[focusIndex], "&nbsp;");
+    setCellValue(currentRound.inputs[focusIndex], "&nbsp;");
 }
 
 function getColorClassName(value) {
@@ -193,22 +221,18 @@ function getColorClassName(value) {
     return "white-circle";
 }
 
-const handleInputClick = (e) => {
-    e.preventDefault();
-    for (let i = 0; i < inputs.length; i++) {
-        if (inputs[i] === e.target || inputs[i].innerText.trim() === "") {
-            if (i !== focusIndex) {
-                unfocus(inputs[focusIndex]);
-                focusIndex = i;
-                focus(inputs[focusIndex]);
-            }
-            break;
-        }
+const roundTemplate = document.getElementById("round-template");
+
+function Round(distance, date, scoreString) {
+    rounds[rounds.length] = this;
+    if (currentInputs) {
+        unfocus(focusIndex);
     }
-};
 
-
-function Round(round) {
+    currentRound = this;
+    const round  = roundTemplate.cloneNode(true);
+    document.getElementById("scores").appendChild(round);
+    round.style.display = "block";
     this.scoreTable = round.getElementsByClassName("score-table").item(0);
     for (let i = 1; i <= 6; i++) {
         this.scoreTable.insertRow().innerHTML = `
@@ -227,23 +251,58 @@ function Round(round) {
                 <td></td>
             `;
     }
+    setVisibility(this.scoreTable, distance);
 
     // Add event listeners to input elements
-    this.inputs = Array.from(round.getElementsByClassName("shot"));
+    this.inputs = currentInputs = Array.from(round.getElementsByClassName("shot"));
+    let index = 0;
+    if(scoreString) {
+        scoreString.split('').forEach(fillScore => {
+            if (fillScore !== "0") {
+                setCellValue(this.inputs[index], fillScore);
+                index++;
+            } else {
+                setCellValue(this.inputs[index - 1], "10");
+            }
+        });
+    }
+    focusIndex = index;
+    focus(focusIndex);
+
+
     this.inputs.forEach(input => {
-        input.addEventListener("click", handleInputClick);
+        input.addEventListener("click", (e) => {
+            e.preventDefault();
+            for (let i = 0; i < currentRound.inputs.length; i++) {
+                if (currentRound.inputs[i] === e.target || currentRound.inputs[i].innerText.trim() === "") {
+                    if (i !== focusIndex) {
+                        unfocus(focusIndex);
+                        focusIndex = i;
+                        focus(focusIndex);
+                    }
+                    break;
+                }
+            }
+        });
     });
 
+    this.totalElement = round.getElementsByClassName("total")[0];
+    this.tenCountElement = round.getElementsByClassName("ten-count")[0];
+    this.xCountElement = round.getElementsByClassName("x-count")[0];
+    this.runningTotalElement = round.getElementsByClassName("running-total")[0];
+    this.runningTenCountElement = round.getElementsByClassName("running-ten-count")[0];
+    this.runningXCountElement = round.getElementsByClassName("running-x-count")[0];
+    if (rounds.length > 1) {
+        round.getElementsByClassName("running")[0].style.display = "block";
+    }
 
-    this.tenCountElement = round.getElementsByClassName("ten-count").item(0);
-    this.xCountElement = round.getElementsByClassName("x-count").item(0);
-    this.date = round.getElementsByClassName("date").item(0);
     this.datePicker = round.getElementsByClassName("date-picker")[0];
-    this.dateDisplay = document.getElementsByClassName('date')[0];
+    this.dateDisplay = round.getElementsByClassName('date')[0];
     this.dateDisplay.addEventListener('click', () => {
         this.datePicker.focus();
         this.datePicker.click();
     });
+    this.dateDisplay.innerHTML = date;
 
     this.datePicker.addEventListener('change', () => {
         const selectedDate = new Date(this.datePicker.value);
@@ -253,53 +312,44 @@ function Round(round) {
     });
 
     this.distance = round.getElementsByClassName('distance')[0];
+    this.distance.innerHTML = distance;
     this.distance.addEventListener('click', (event) => {
         distanceToBeSet = event.target;
         distanceMenu.style.display = (distanceMenu.style.display === 'block') ? 'none' : 'block';
         distanceMenu.style.left = `${event.pageX}px`;
         distanceMenu.style.top = `${event.pageY}px`;
     });
-
-
+    calculateScoreFor(this);
+}
+function setVisibility(table, distance){
+    const display = distance === "18m" ? "none" : "";
+    table.rows[10].style.display = display;
+    table.rows[11].style.display = display;
 }
 
-let rounds = [new Round(document.getElementsByClassName("round").item(0))];
+let rounds = [];
 
 function restore() {
     const searchParams = new URLSearchParams(window.location.search);
     // restore state from URL
     let index = 0;
-    if (searchParams.has("score")) {
-        const scoreString = searchParams.get("score");
-        scoreString.split('').forEach(fillScore => {
-            if (fillScore !== "0") {
-                setCellValue(rounds[0].inputs[index], fillScore);
-                index++;
-            } else {
-                setCellValue(rounds[0].inputs[index - 1], "10");
-            }
-        });
-        focusIndex = ((index) === rounds[0].inputs.length) ? index - 1 : index;
-        focus(rounds[0].inputs[focusIndex]);
-    } else {
-        focus(rounds[0].inputs[0]);
-    }
-    let date;
-    if (searchParams.has("date")) {
-        date = searchParams.get("date");
-    } else {
-        date = formatDate(new Date());
-    }
-    rounds[0].date.innerText = date;
-    rounds[0].datePicker.value = date;
+    const scoreStrings = searchParams.getAll("score");
+    const dates = searchParams.getAll("date");
+    const distances = searchParams.getAll("distance");
+    if (scoreStrings.length > 0) {
+        const loop = Math.min(scoreStrings.length, dates.length, distances.length);
+        for (let i = 0; i < loop; i++) {
+            const scoreString = scoreStrings[i];
+            const date = dates[i];
+            const distance = distances[i];
+            const round = new Round(distance, date, scoreString);
+        }
 
-    if (searchParams.has("distance")) {
-        rounds[0].distance.innerText = searchParams.get("distance");
     } else {
-        rounds[0].distance.innerText = "70m";
+        const date = formatDate(new Date());
+        const round = new Round("70m", date);
     }
-    calculateScore(rounds[0]);
-
+    focus(focusIndex);
 }
 
 restore();
@@ -307,9 +357,9 @@ restore();
 function clearScore() {
     if (confirm("スコアを消去して良いですか?")) {
         rounds[0].inputs.forEach(input => setCellValue(input, "&nbsp;"));
-        unfocus(rounds[0].inputs[focusIndex]);
+        unfocus(focusIndex);
         focusIndex = 0;
-        focus(rounds[0].inputs[focusIndex]);
+        focus(focusIndex);
         removeThumbnail();
         calculateScore();
         saveToURL();
@@ -379,9 +429,13 @@ document.addEventListener('click', (event) => {
 
 Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem => elem.addEventListener('click', (event) => {
     if (distanceToBeSet === plusButton) {
-        // add new scorecard
+        const date = formatDate(new Date());
+        new Round(elem.innerText, date);
+        setPlusButtonVisibility();
     } else {
         distanceToBeSet.innerText = elem.innerText;
+        const element = distanceToBeSet.parentNode.parentNode.querySelector('.score-table');
+        setVisibility(element,elem.innerText);
         distanceMenu.style.display = 'none';
         saveToURL();
     }

@@ -9,12 +9,12 @@ body {
     overflow-y: auto;
 }
 
-#score-table {
+.score-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-#score-table th, td {
+.score-table th, td {
     border: 1px solid black;
     padding: 2px;
     font-size: 1.2rem;
@@ -131,25 +131,25 @@ body {
     color: black;
 }
 
-#score-table {
+.score-table {
     width: 100%;
     table-layout: fixed;
 }
 
-#score-table td:nth-child(1) {
+.score-table td:nth-child(1) {
     width: 5%;
 }
 
-#score-table td:nth-child(2),
-#score-table td:nth-child(3),
-#score-table td:nth-child(4),
-#score-table td:nth-child(5),
-#score-table td:nth-child(6) {
+.score-table td:nth-child(2),
+.score-table td:nth-child(3),
+.score-table td:nth-child(4),
+.score-table td:nth-child(5),
+.score-table td:nth-child(6) {
     width: 15%;
 
 }
 
-#score-table td:nth-child(7) {
+.score-table td:nth-child(7) {
     width: 20%;
 }
 

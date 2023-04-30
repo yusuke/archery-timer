@@ -10,21 +10,22 @@
 <body>
 <div class="contents" id="contents">
     <div id="scores">
-        <div class="round">
-            <div>
-                <!--suppress HtmlFormInputWithoutLabel -->
-                <input type="date" class="date-picker"><span class="date"></span>&nbsp;&nbsp;&nbsp;<span id="distance"
-                                                                                                         class="distance"></span>
-            </div>
-            <table id="score-table" class="score-table">
-            </table>
-            <div>10s:<span class="ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:<span class="x-count">0</span>
-            </div>
-        </div>
-        <div style="text-align: center">
-            <button id="plus-button" class="plusButton">+</button>
-        </div>
 
+    </div>
+    <div style="text-align: center">
+        <button id="plus-button" class="plusButton" style="margin: 0 auto; display: none">+</button>
+    </div>
+    <div id="round-template" class="round" style="display: none">
+        <div>
+            <!--suppress HtmlFormInputWithoutLabel -->
+            <input type="date" class="date-picker"><span class="date"></span>&nbsp;&nbsp;&nbsp;<span class="distance"></span>
+        </div>
+        <table class="score-table">
+        </table>
+        <div style="text-align: right">Total:<span class="total">0</span>&nbsp;&nbsp;&nbsp;&nbsp;10s:<span class="ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:<span class="x-count">0</span>
+        </div>
+        <div style="text-align: right;display:none" class="running" >Running Total:<span class="running-total">0</span>&nbsp;&nbsp;&nbsp;&nbsp;10s:<span class="running-ten-count">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Xs:<span class="running-x-count">0</span>
+        </div>
     </div>
 
     <div id="popup-menu" class="popup-menu">
@@ -46,6 +47,7 @@
         <a href="#" id="40m" class="distance-menu-choice">40m</a>
         <hr>
         <a href="#" id="18m" class="distance-menu-choice">18m</a>
+        <a href="#" id="18m(36 shots)" class="distance-menu-choice">18m(36 shots)</a>
     </div>
 
 </div>
