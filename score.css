@@ -2,12 +2,11 @@ body {
     font-family: sans-serif;
 }
 
-.contents {
-    padding-top: 5px;
+.body {
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
-    max-height: calc(100vh - 192px);
+    /*max-height: calc(100vh - 192px);*/
     overflow-y: auto;
 }
 
