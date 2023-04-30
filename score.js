@@ -182,15 +182,17 @@ function buttonPressed(e) {
     }
     setPlusButtonVisibility();
 
-    saveToURL();
+    saveToLocalStorage();
     setTimeout(calculateScore, 50);
 }
 
-function saveToURL() {
-    const score = rounds.map(e => e.inputs.map(input => input.textContent.trim()).join('')).join('&score=');
-    const date = rounds.map(e => e.dateDisplay.innerText).join('&date=');
-    const distance = rounds.map(e => e.distance.innerText).join('&distance=');
-    history.replaceState("", "", `?date=${date}&distance=${distance}&score=${score}`);
+function saveToLocalStorage() {
+    const scores = rounds.map(e => e.inputs.map(input => input.textContent.trim()).join('')).join(',');
+    const dates = rounds.map(e => e.dateDisplay.innerText).join(',');
+    const distances = rounds.map(e => e.distance.innerText).join(',');
+    localStorage.setItem("scores", scores);
+    localStorage.setItem("dates",dates);
+    localStorage.setItem("distances",distances);
 }
 
 function setCellValue(inputElem, value) {
@@ -309,7 +311,7 @@ function Round(distance, date, scoreString) {
     this.datePicker.addEventListener('change', () => {
         const selectedDate = new Date(this.datePicker.value);
         this.dateDisplay.textContent = formatDate(selectedDate);
-        saveToURL();
+        saveToLocalStorage();
         this.datePicker.click();
     });
 
@@ -341,19 +343,20 @@ function setVisibility(table, distance){
 let rounds = [];
 
 function restore() {
-    const searchParams = new URLSearchParams(window.location.search);
-    // restore state from URL
-    let index = 0;
-    const scoreStrings = searchParams.getAll("score");
-    const dates = searchParams.getAll("date");
-    const distances = searchParams.getAll("distance");
+    // restore state from local storage
+    let scores = localStorage.getItem("scores");
+    const scoreStrings = scores ? scores.split(",") : [];
+    let storedDates = localStorage.getItem("dates");
+    const dates = storedDates ? storedDates.split(",") : [];
+    let storedDistances = localStorage.getItem("distances");
+    const distances = storedDistances ? storedDistances.split(",") : [];
     if (scoreStrings.length > 0) {
         const loop = Math.min(scoreStrings.length, dates.length, distances.length);
         for (let i = 0; i < loop; i++) {
             const scoreString = scoreStrings[i];
             const date = dates[i];
             const distance = distances[i];
-            const round = new Round(distance, date, scoreString);
+            new Round(distance, date, scoreString);
         }
 
     } else {
@@ -367,11 +370,14 @@ restore();
 function clearScore() {
     if (confirm("スコアを消去して良いですか?")) {
         removeThumbnail();
+        localStorage.removeItem("scores");
+        localStorage.removeItem("dates");
+        localStorage.removeItem("distances");
         rounds = [];
         const scores = document.getElementById("scores");
         scores.innerHTML = '';
         new Round("70m", formatDate(new Date()));
-        saveToURL();
+        saveToLocalStorage();
     }
 }
 
@@ -446,7 +452,7 @@ Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem
         const element = distanceToBeSet.parentNode.parentNode.querySelector('.score-table');
         setVisibility(element,elem.innerText);
         distanceMenu.style.display = 'none';
-        saveToURL();
+        saveToLocalStorage();
     }
 }))
 
