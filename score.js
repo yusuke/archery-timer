@@ -544,6 +544,9 @@ Array.from(document.getElementsByClassName("distance-menu-choice")).forEach(elem
     if (distanceToBeSet === plusButton) {
         const date = formatDate(new Date());
         new Round(elem.innerText, date);
+        const rounds = document.getElementsByClassName("round");
+        // last round is 2nd from the last. the last round is template.
+        rounds[rounds.length-2].scrollIntoView({behavior: "smooth", block: "start"});
         event.preventDefault();
     } else {
         distanceToBeSet.innerText = elem.innerText;
