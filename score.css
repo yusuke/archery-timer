@@ -5,6 +5,8 @@ body {
 .contents {
     padding-top: 5px;
     width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
     max-height: calc(100vh - 192px);
     overflow-y: auto;
 }
@@ -32,8 +34,10 @@ body {
 #keyboard {
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
+    max-width: 400px;
     height: 162px;
     color: #FFFFFF;
 
