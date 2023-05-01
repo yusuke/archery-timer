@@ -2,6 +2,8 @@ let focusIndex = 0;
 let focusRound = 0;
 let currentRound;
 let currentInputs;
+let enclosingRound;
+
 function isFilled(elems) {
     return (elems[0].textContent + elems[1].textContent + elems[2].textContent).trim() !== "";
 }
@@ -252,54 +254,19 @@ document.addEventListener('click', (event) => {
         distanceMenu.style.display = 'none';
     }
 });
-const editButton = document.getElementById("edit-button");
-const editForm = document.getElementById('edit-form');
-
-editButton.addEventListener('click', event => {
-    document.getElementById("event-name").value = currentRound.eventNameContent.innerText;
-    document.getElementById("place").value = currentRound.placeContent.innerText;
-    document.getElementById("weather").value = currentRound.weatherContent.innerText;
-    document.getElementById("wind").value = currentRound.windContent.innerText;
-    document.getElementById("sight").value = currentRound.sightContent.innerText;
-    document.getElementById("brace-height").value = currentRound.braceHeightContent.innerText;
-    document.getElementById("note").value = currentRound.noteContent.innerText;
-    editForm.style.display = (editForm.style.display === 'block') ? 'none' : 'block';
-    document.getElementById("event-name").scrollIntoView({behavior: "smooth", block: "start"});
-});
-
-const editOK = document.getElementById("edit-ok");
-
-editOK.addEventListener('click', event => {
-    const eventName = document.getElementById("event-name").value;
-    setContentAndVisibility(currentRound.eventNameContent,  eventName);
-    const place = document.getElementById("place").value;
-    setContentAndVisibility(currentRound.placeContent,  place);
-    const weather = document.getElementById("weather").value;
-    setContentAndVisibility(currentRound.weatherContent,  weather);
-    const wind = document.getElementById("wind").value;
-    setContentAndVisibility(currentRound.windContent,  wind);
-    const sight = document.getElementById("sight").value;
-    setContentAndVisibility(currentRound.sightContent,  sight);
-    const braceHeight = document.getElementById("brace-height").value;
-    setContentAndVisibility(currentRound.braceHeightContent,  braceHeight);
-    const note = document.getElementById("note").value;
-    setContentAndVisibility(currentRound.noteContent,  note);
-    editForm.style.display = 'none';
-    saveToLocalStorage();
-});
 
 const roundTemplate = document.getElementById("round-template");
 
 function setContentAndVisibility(elem, value) {
-    if (value) {
+    if (value === '' || value) {
         elem.innerText = value;
-        console.log(elem.classList + ":" + value);
         elem.parentNode.style.display = value.trim() !== '' ? "block" : "none";
     }
 }
 
 function Round(distance, date, scoreString, eventName, place, weather, wind, sight, braceHeight, note) {
-    rounds[rounds.length] = this;
+    const roundIndex =rounds.length;
+    rounds[roundIndex] = this;
     if (currentInputs) {
         unfocus(focusIndex);
     }
@@ -412,6 +379,46 @@ function Round(distance, date, scoreString, eventName, place, weather, wind, sig
         distanceMenu.style.left = `${event.pageX}px`;
         distanceMenu.style.top = `${event.pageY}px`;
     });
+    this.editButton = round.getElementsByClassName("edit-button")[0];
+    const editForm = this.editForm = round.getElementsByClassName('edit-form')[0];
+
+    this.editButton.addEventListener('click', event => {
+        enclosingRound = rounds[roundIndex];
+        editForm.getElementsByClassName("event-name"[0]).value = enclosingRound.eventNameContent.innerText;
+        editForm.getElementsByClassName("place")[0].value = enclosingRound.placeContent.innerText;
+        editForm.getElementsByClassName("weather")[0].value = enclosingRound.weatherContent.innerText;
+        editForm.getElementsByClassName("wind")[0].value = enclosingRound.windContent.innerText;
+        editForm.getElementsByClassName("sight")[0].value = enclosingRound.sightContent.innerText;
+        editForm.getElementsByClassName("brace-height"[0]).value = enclosingRound.braceHeightContent.innerText;
+        editForm.getElementsByClassName("note")[0].innerText = enclosingRound.noteContent.innerText;
+        enclosingRound.editForm.style.display = (enclosingRound.editForm.style.display === 'block') ? 'none' : 'block';
+        editForm.scrollIntoView({behavior: "smooth", block: "start"});
+    });
+
+
+    this.editOK = round.getElementsByClassName("edit-ok")[0];
+
+    this.editOK.addEventListener('click', event => {
+        enclosingRound = rounds[roundIndex];
+        const eventName = editForm.getElementsByClassName("event-name")[0].value;
+        setContentAndVisibility(enclosingRound.eventNameContent,  eventName);
+        const place = editForm.getElementsByClassName("place")[0].value;
+        setContentAndVisibility(enclosingRound.placeContent,  place);
+        const weather = editForm.getElementsByClassName("weather")[0].value;
+        setContentAndVisibility(enclosingRound.weatherContent,  weather);
+        const wind = editForm.getElementsByClassName("wind")[0].value;
+        setContentAndVisibility(enclosingRound.windContent,  wind);
+        const sight = editForm.getElementsByClassName("sight")[0].value;
+        setContentAndVisibility(enclosingRound.sightContent,  sight);
+        const braceHeight = editForm.getElementsByClassName("brace-height")[0].value;
+        setContentAndVisibility(enclosingRound.braceHeightContent,  braceHeight);
+        const note = editForm.getElementsByClassName("note")[0].value;
+        setContentAndVisibility(enclosingRound.noteContent,  note);
+        enclosingRound.editForm.style.display = 'none';
+        saveToLocalStorage();
+    });
+
+
     calculateScoreFor(this);
     setPlusButtonVisibility();
     focus(focusIndex);
