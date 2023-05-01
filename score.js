@@ -512,7 +512,12 @@ function removeThumbnail() {
 }
 
 function downloadScreenshot() {
+    const editButtons = document.getElementsByClassName("edit-button");
+    for (let i = 0; i < editButtons.length - 1; i++) {
+        editButtons[i].style.display = "none";
+    }
     html2canvas(scoreElement).then(canvas => {
+
         const img = document.createElement("img");
         img.src = canvas.toDataURL("image/png");
 
@@ -520,6 +525,10 @@ function downloadScreenshot() {
         scoreElement.appendChild(img);
         scoreElement.addEventListener("click", removeThumbnail);
     });
+    for (let i = 0; i < editButtons.length - 1; i++) {
+        editButtons[i].style.display = "block";
+    }
+
 }
 
 document.getElementById("save-button").addEventListener("click", downloadScreenshot);
